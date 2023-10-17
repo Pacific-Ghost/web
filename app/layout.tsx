@@ -1,22 +1,22 @@
 import "./globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type {Metadata} from "next";
+import {Roboto} from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const robotoSerif = Roboto({subsets: ["latin"], weight: ["100"]});
 
 export const metadata: Metadata = {
-  title: "Pacific Ghost",
-  description: "Pacific Ghost - Coast to coast",
+    title: "Pacific Ghost",
+    description: "Pacific Ghost - Coast to coast",
 };
 
 export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
+                                       children,
+                                   }: {
+    children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
-  );
+    return (
+        <html lang="en">
+        <body className={robotoSerif.className}>{children}</body>
+        </html>
+    );
 }
