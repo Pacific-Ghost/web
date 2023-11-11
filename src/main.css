@@ -3,3 +3,6 @@
     src: url("./assets/fonts/Aerishhawk.ttf") format('truetype');
     src: url("./assets/fonts/Aerishhawk.otf") format('opentype');
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
