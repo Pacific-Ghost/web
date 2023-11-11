@@ -1,10 +1,8 @@
-import { Typography } from "@mui/material";
-
 function Brand() {
   return (
-    <Typography variant="h1" fontFamily={"Aerishhawk"} className="text-center">
+    <h1 className="text-center font-brand text-8xl">
       Pacific Ghost
-    </Typography>
+    </h1>
   );
 }
 
