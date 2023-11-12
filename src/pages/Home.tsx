@@ -39,7 +39,7 @@ function Home() {
 
 function HomeNavLink({ children, ...rest }: PropsWithChildren<LinkProps>) {
   return (
-    <Link className="mx-5 text-xl" {...rest}>
+    <Link className="mx-5 md:text-xl text-xs" {...rest}>
       {children}
     </Link>
   );
