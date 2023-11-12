@@ -3,10 +3,12 @@ import Link from "../components/Link.tsx";
 import {Grid} from "@mui/material";
 import {PropsWithChildren} from "react";
 import {LinkProps} from "react-router-dom";
+import {Helmet} from "react-helmet-async";
 
 function Home() {
     return (
         <>
+            <Helmet title="Pacific Ghost - Home" />
             <Grid
                 container
                 spacing={0}
