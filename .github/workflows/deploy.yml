@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: "20"
 
       - name: Install dependencies
         run: npm install --no-color
@@ -33,5 +33,5 @@ jobs:
 
       - name: Upload files to S3 bucket and clear cache
         run: |
-          aws s3 sync ./out s3://www.pacificghost.fm --delete --region us-west-1
+          aws s3 sync ./dist s3://www.pacificghost.fm --delete --region us-west-1
           aws cloudfront create-invalidation --distribution-id ${{ secrets.PG_WEBSITE_CF_DISTRO_ID }} --paths "/*"

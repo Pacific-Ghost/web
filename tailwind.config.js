@@ -1,18 +1,24 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+
+import {fontFamily} from "tailwindcss/defaultTheme"
+
+export default {
+  content: ["./src/**/*.{tsx,jsx}"],
   theme: {
+    colors: {
+      primary: "#2a07bf",
+      background : "#ffd2c0",
+    },
+    lineHeight: {
+      '2': '.5rem'
+    },
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
+      fontFamily: {
+        brand: ['Flared', ...fontFamily.sans],
+        sans: ['Roboto', ...fontFamily.sans]
+      }
     },
   },
   plugins: [],
-};
+}
+
