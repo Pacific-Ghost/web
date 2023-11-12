@@ -6,7 +6,6 @@ import { LinkProps } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 function Home() {
-
   const handleContactClick = (e: any) => {
     e.preventDefault();
     window.location.href = "mailto:hello@pacificghost.fm";
@@ -24,15 +23,14 @@ function Home() {
         sx={{ minHeight: "100vh" }}
       >
         <Grid item xs={3}>
-          <Brand />
-        </Grid>
-        <Grid item xs={3} spacing={3}>
-          <HomeNavLink to="/music">music</HomeNavLink>
-          <HomeNavLink to="/bio">bio</HomeNavLink>
-          <HomeNavLink to="#" onClick={handleContactClick}>
-            contact
-          </HomeNavLink>
-          <HomeNavLink to="/news">news</HomeNavLink>
+          <Brand>
+            <HomeNavLink to="/music">music</HomeNavLink>
+            <HomeNavLink to="/bio">bio</HomeNavLink>
+            <HomeNavLink to="#" onClick={handleContactClick}>
+              contact
+            </HomeNavLink>
+            <HomeNavLink to="/news">news</HomeNavLink>
+          </Brand>
         </Grid>
       </Grid>
     </>
