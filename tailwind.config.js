@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        brand: ["Aerishhawk", ...fontFamily.serif]
+        brand: [...fontFamily.serif]
       }
     },
   },
