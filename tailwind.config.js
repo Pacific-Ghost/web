@@ -7,7 +7,7 @@ export default {
   theme: {
     colors: {
       primary: "#2a07bf",
-      background : "#ffd2c0",
+      salmon : "#ffd2c0",
     },
     lineHeight: {
       '2': '.5rem'
