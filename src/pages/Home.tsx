@@ -1,47 +1,33 @@
-import Brand from "../components/Brand.tsx";
-import Link from "../components/Link.tsx";
-import { Grid } from "@mui/material";
-import { PropsWithChildren } from "react";
-import { LinkProps } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { Box, Container } from "@mui/material";
 
 function Home() {
-  const handleContactClick = (e: any) => {
-    e.preventDefault();
-    window.location.href = "mailto:hello@pacificghost.fm";
-  };
-
   return (
     <>
-      <Helmet title="Pacific Ghost - Home" />
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ minHeight: "100vh" }}
-      >
-        <Grid item xs={3}>
-          <Brand>
-            <HomeNavLink to="/music">music</HomeNavLink>
-            <HomeNavLink to="/bio">bio</HomeNavLink>
-            <HomeNavLink to="#" onClick={handleContactClick}>
-              contact
-            </HomeNavLink>
-            <HomeNavLink to="/news">news</HomeNavLink>
-          </Brand>
-        </Grid>
-      </Grid>
+      <Container>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
+          <Box>
+            <h1 className="glitch">Pacific Ghost</h1>
+            <a href="mailto:hello@pacificghost.fm">contact</a>{" "}
+             <a href="mailto:hello@pacificghost.fm">contact</a>
+            <iframe
+              style={{ border: 0, width: 350, height: 555 }}
+              src="https://bandcamp.com/EmbeddedPlayer/album=1184904375/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/"
+              seamless
+            >
+              <a href="https://pacificghost8675.bandcamp.com/album/the-hill">
+                The Hill by Pacific Ghost
+              </a>
+            </iframe>
+          </Box>
+        </Box>
+      </Container>
     </>
-  );
-}
-
-function HomeNavLink({ children, ...rest }: PropsWithChildren<LinkProps>) {
-  return (
-    <Link className="mx-5 md:text-xl text-xs" {...rest}>
-      {children}
-    </Link>
   );
 }
 

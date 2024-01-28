@@ -7,7 +7,7 @@ import Bio from "./pages/Bio.tsx";
 import News from "./pages/News.tsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home />, errorElement: <FourOhFour /> },
+  { path: "/", index: true, element: <Home />, errorElement: <FourOhFour /> },
   { path: "/music", element: <Music /> },
   { path: "/bio", element: <Bio /> },
   { path: "/news", element: <News /> },
