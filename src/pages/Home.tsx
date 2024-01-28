@@ -1,4 +1,5 @@
 import { Glitch } from "../components/Glitch.tsx";
+import {Player} from "../components/Player.tsx";
 
 function Home() {
   return (
@@ -16,17 +17,7 @@ function Home() {
                   contact
                 </a>{" "}
               </div>
-              <div style={{ width: 350, height: 555 }}>
-                <iframe
-                  style={{ border: 0, width: "100%", height: "100%" }}
-                  src="https://bandcamp.com/EmbeddedPlayer/album=1184904375/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=true/transparent=true/"
-                  seamless
-                >
-                  <a href="https://pacificghost8675.bandcamp.com/album/the-hill">
-                    The Hill by Pacific Ghost
-                  </a>
-                </iframe>
-              </div>
+              <Player style={{ width: 350, height: 555 }} />
             </div>
           </div>
         </div>
