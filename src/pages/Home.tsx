@@ -1,43 +1,36 @@
-import { Box, Container } from "@mui/material";
+import { Glitch } from "../components/Glitch.tsx";
 
 function Home() {
   return (
     <>
-      <Container>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-            justifyContent: 'center',
-            height: '100vh'
-          }}
-        >
-          <Box>
-            <div className="glitch">
-              <h1 className="glitch text-7xl" data-text="Pacific Ghost">
-                Pacific Ghost
-              </h1>
-              <h1 className="glow text-7xl">Pacific Ghost</h1>
-            </div>
-            <div className="scanlines"></div>
+      <div className="flex flex-col justify-center h-screen mx-auto px-6 sm:px-12 md:px-20 lg:px-36 xl:px-64">
+        <div className="flex flex-col items-center md:items-end justify-center">
+          <div>
+            <Glitch>Pacific Ghost</Glitch>
             <div className="z-50 relative">
               <div className="mb-3.5">
-                <a href="mailto:hello@pacificghost.fm" className="cursor-pointer">contact</a>{" "}
+                <a
+                  href="mailto:hello@pacificghost.fm"
+                  className="cursor-pointer"
+                >
+                  contact
+                </a>{" "}
               </div>
-              <iframe
-                  style={{border: 0, width: 350, height: 555}}
+              <div style={{ width: 350, height: 555 }}>
+                <iframe
+                  style={{ border: 0, width: "100%", height: "100%" }}
                   src="https://bandcamp.com/EmbeddedPlayer/album=1184904375/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=true/transparent=true/"
                   seamless
-              >
-                <a href="https://pacificghost8675.bandcamp.com/album/the-hill">
-                  The Hill by Pacific Ghost
-                </a>
-              </iframe>
+                >
+                  <a href="https://pacificghost8675.bandcamp.com/album/the-hill">
+                    The Hill by Pacific Ghost
+                  </a>
+                </iframe>
+              </div>
             </div>
-          </Box>
-        </Box>
-      </Container>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
