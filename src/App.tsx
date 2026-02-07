@@ -178,7 +178,10 @@ function App() {
     }, 100)
 
     autoPlayTimeoutRef.current = setTimeout(() => {
-      nextEP()
+      setCurrentEP((prev) => (prev + 1) % EP_THEMES.length)
+      setCurrentTrack(0)
+      setStoryProgress(0)
+      setIsPlaying(false)
     }, SLIDE_DURATION)
 
     return () => {
