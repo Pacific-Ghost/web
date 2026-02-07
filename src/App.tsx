@@ -32,7 +32,7 @@ const EP_THEMES: EPTheme[] = [
     primary: '#ff006e',
     secondary: '#00d9ff',
     textColor: '#f0f0ff',
-    fontFamily: "'Futura', 'Trebuchet MS', 'Century Gothic', sans-serif",
+    fontFamily: "'Megrim', 'Futura', 'Trebuchet MS', 'Century Gothic', sans-serif",
     tracks: [
       { id: 1, name: 'Fading Streetlights', file: '/audio/track1.mp3' },
       { id: 2, name: 'Neon Dreams', file: '/audio/track2.mp3' },
@@ -68,6 +68,60 @@ const EP_THEMES: EPTheme[] = [
 ]
 
 const SLIDE_DURATION = 10000 // 10 seconds
+const PULSE_SPEED = 3 // seconds per cycle
+
+function generateEKGPath(startX: number, endX: number, centerY: number, numBeats: number, amplitude: number): string {
+  const segmentWidth = (endX - startX) / numBeats
+  let d = `M ${startX} ${centerY}`
+
+  for (let i = 0; i < numBeats; i++) {
+    const x = startX + i * segmentWidth
+    const flatLen = segmentWidth * 0.35
+    const spikeStart = x + flatLen
+    const spikeWidth = segmentWidth * 0.3
+
+    d += ` L ${spikeStart} ${centerY}`
+    d += ` Q ${spikeStart + spikeWidth * 0.1} ${centerY - amplitude * 0.15} ${spikeStart + spikeWidth * 0.2} ${centerY}`
+    d += ` L ${spikeStart + spikeWidth * 0.3} ${centerY + amplitude * 0.15}`
+    d += ` L ${spikeStart + spikeWidth * 0.4} ${centerY - amplitude}`
+    d += ` L ${spikeStart + spikeWidth * 0.5} ${centerY + amplitude * 0.4}`
+    d += ` L ${spikeStart + spikeWidth * 0.6} ${centerY}`
+    d += ` Q ${spikeStart + spikeWidth * 0.8} ${centerY - amplitude * 0.2} ${spikeStart + spikeWidth} ${centerY}`
+    d += ` L ${x + segmentWidth} ${centerY}`
+  }
+
+  return d
+}
+
+function HeartbeatTitle({ text }: { text: string }) {
+  const ekgPath = generateEKGPath(0, 1000, 100, 3, 60)
+
+  return (
+    <div className="heartbeat-title">
+      <h1 className="monitor-text">{text}</h1>
+      <div className="monitor-line-container">
+        <svg viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid meet">
+          <path d={ekgPath} className="monitor-flatline" />
+          <path
+            d={ekgPath}
+            className="monitor-pulse-line"
+            style={{
+              strokeDasharray: '150 2500',
+              animation: `monitorPulse ${PULSE_SPEED}s linear infinite`,
+            }}
+          />
+          <circle r="4" className="monitor-dot">
+            <animateMotion
+              dur={`${PULSE_SPEED}s`}
+              repeatCount="indefinite"
+              path={ekgPath}
+            />
+          </circle>
+        </svg>
+      </div>
+    </div>
+  )
+}
 
 function App() {
   const [currentEP, setCurrentEP] = useState(0)
@@ -227,7 +281,11 @@ function App() {
 
         <div className="ep-info">
           <div className="ep-subtitle">PACIFIC GHOST</div>
-          <h1 className="ep-title">{currentTheme.name}</h1>
+          {currentTheme.id === 'lovesickage' ? (
+            <HeartbeatTitle text={currentTheme.name} />
+          ) : (
+            <h1 className="ep-title">{currentTheme.name}</h1>
+          )}
           <div className={`ep-status ${currentTheme.statusType}`}>{currentTheme.status}</div>
           <p className="ep-description">
             {currentTheme.description.map((line, i) => (
