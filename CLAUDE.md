@@ -4,52 +4,49 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-<!-- Add a brief description of what this project does and its purpose -->
+Pacific Ghost band website — an Instagram-story style carousel showcasing EPs with dynamic theming, heartbeat animations, and an audio player.
 
 ## Build and Development
 
 ### Prerequisites
-<!-- Document any tools or versions required (e.g., Node.js 18+, Python 3.10+) -->
+Node.js 22+ (managed via Volta)
 
 ### Setup
-<!-- Steps to set up the development environment -->
+`npm install`
 
 ### Build
-<!-- Command to build the project -->
+`npm run build` (runs `tsc && vite build`)
 
 ### Development Server
-<!-- How to run a local development server -->
+`npm run dev`
 
 ### Linting and Formatting
-<!-- Commands for linting, type checking, and formatting code -->
+- `npm run lint`
+- `npx tsc --noEmit` — type check
 
 ### Tests
-<!--
-How to run all tests:
-How to run a single test file:
-How to run tests in watch mode:
--->
+- `npm test` — run all tests (vitest)
+- `npx vitest run src/path/to/file.test.ts` — single file
+- `npm run test:watch` — watch mode
 
 ## Architecture
 
 ### High-Level Structure
-<!--
-Describe the overall architecture in 2-3 paragraphs.
-Focus on major layers/components and how they interact.
-Examples: client/server separation, main feature domains, data flow patterns.
--->
+Single-page React app built with Vite. The carousel auto-advances between EP slides on a 10-second timer, with per-EP theming (colors, fonts) applied via CSS custom properties and `data-theme` attributes. An audio player bar sits at the bottom.
 
 ### Key Directories
-<!-- Only document directories that aren't self-explanatory, and focus on their architectural role rather than listing all files -->
+- `src/data/` — EP theme configuration (track lists, colors, fonts)
+- `src/utils/` — Pure utility functions (EKG SVG path generation)
+- `src/components/` — Extracted UI components (HeartbeatTitle, StoryProgress, PlayerBar)
+- `src/App.tsx` — Carousel orchestration and state management
+- `src/App.css` — All styling (single file, not split by component)
 
 ## Technology Stack
 
-<!-- Document major technologies and frameworks used -->
+React 18, TypeScript, Vite (with SWC plugin), Vitest + Testing Library
 
 ## Common Development Tasks
 
-<!-- Add specific patterns or gotchas discovered during development -->
-
-## Additional Notes
-
-<!-- Any other important context for future work -->
+- Use `ReturnType<typeof setTimeout>` for timer refs — `@types/node` is not installed, so `NodeJS.Timeout` won't compile
+- EP themes are in `src/data/eps.ts` — add new EPs there (the carousel auto-discovers them)
+- CSS theming uses `[data-theme="epid"]` selectors in App.css

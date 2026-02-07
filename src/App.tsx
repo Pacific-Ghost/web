@@ -1,127 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import './App.css'
-
-// EP Theme Configuration
-interface EPTheme {
-  id: string
-  name: string
-  icon: string
-  status: string
-  statusType: 'coming' | 'available'
-  description: string[]
-  bgColor: string
-  primary: string
-  secondary: string
-  textColor: string
-  fontFamily: string
-  tracks: Array<{ id: number; name: string; file: string }>
-}
-
-const EP_THEMES: EPTheme[] = [
-  {
-    id: 'lovesickage',
-    name: 'LOVE SICK AGE',
-    icon: '◆',
-    status: 'Coming Soon',
-    statusType: 'coming',
-    description: [
-      'Five tracks of reverb-soaked guitars and ethereal vocals.',
-      'A hazy journey through neon-lit memories.',
-    ],
-    bgColor: '#0a0515',
-    primary: '#ff006e',
-    secondary: '#00d9ff',
-    textColor: '#f0f0ff',
-    fontFamily: "'Megrim', 'Futura', 'Trebuchet MS', 'Century Gothic', sans-serif",
-    tracks: [
-      { id: 1, name: 'Fading Streetlights', file: '/audio/track1.mp3' },
-      { id: 2, name: 'Neon Dreams', file: '/audio/track2.mp3' },
-      { id: 3, name: 'Reverb Memories', file: '/audio/track3.mp3' },
-      { id: 4, name: 'Midnight Haze', file: '/audio/track4.mp3' },
-      { id: 5, name: 'Love Sick Age', file: '/audio/track5.mp3' },
-    ],
-  },
-  {
-    id: 'thehill',
-    name: 'THE HILL',
-    icon: '⬡',
-    status: 'Stream Now',
-    statusType: 'available',
-    description: [
-      'Debut EP. Six sun-drenched tracks.',
-      'Hazy guitar walls meet golden hour nostalgia.',
-    ],
-    bgColor: '#1a0a0f',
-    primary: '#ff1493',
-    secondary: '#ffd700',
-    textColor: '#fff5e6',
-    fontFamily: "'Copperplate', 'Copperplate Gothic Light', sans-serif",
-    tracks: [
-      { id: 1, name: 'Golden Daze', file: '/audio/hill1.mp3' },
-      { id: 2, name: 'Sunset Drive', file: '/audio/hill2.mp3' },
-      { id: 3, name: 'The Hill', file: '/audio/hill3.mp3' },
-      { id: 4, name: 'Amber Waves', file: '/audio/hill4.mp3' },
-      { id: 5, name: 'Fading Light', file: '/audio/hill5.mp3' },
-      { id: 6, name: 'Last Summer', file: '/audio/hill6.mp3' },
-    ],
-  },
-]
+import { EP_THEMES } from './data/eps'
+import { HeartbeatTitle } from './components/HeartbeatTitle'
+import { StoryProgress } from './components/StoryProgress'
+import { PlayerBar } from './components/PlayerBar'
 
 const SLIDE_DURATION = 10000 // 10 seconds
-const PULSE_SPEED = 3 // seconds per cycle
-
-function generateEKGPath(startX: number, endX: number, centerY: number, numBeats: number, amplitude: number): string {
-  const segmentWidth = (endX - startX) / numBeats
-  let d = `M ${startX} ${centerY}`
-
-  for (let i = 0; i < numBeats; i++) {
-    const x = startX + i * segmentWidth
-    const flatLen = segmentWidth * 0.35
-    const spikeStart = x + flatLen
-    const spikeWidth = segmentWidth * 0.3
-
-    d += ` L ${spikeStart} ${centerY}`
-    d += ` Q ${spikeStart + spikeWidth * 0.1} ${centerY - amplitude * 0.15} ${spikeStart + spikeWidth * 0.2} ${centerY}`
-    d += ` L ${spikeStart + spikeWidth * 0.3} ${centerY + amplitude * 0.15}`
-    d += ` L ${spikeStart + spikeWidth * 0.4} ${centerY - amplitude}`
-    d += ` L ${spikeStart + spikeWidth * 0.5} ${centerY + amplitude * 0.4}`
-    d += ` L ${spikeStart + spikeWidth * 0.6} ${centerY}`
-    d += ` Q ${spikeStart + spikeWidth * 0.8} ${centerY - amplitude * 0.2} ${spikeStart + spikeWidth} ${centerY}`
-    d += ` L ${x + segmentWidth} ${centerY}`
-  }
-
-  return d
-}
-
-function HeartbeatTitle({ text }: { text: string }) {
-  const ekgPath = generateEKGPath(0, 1000, 100, 3, 60)
-
-  return (
-    <div className="heartbeat-title">
-      <h1 className="monitor-text">{text}</h1>
-      <div className="monitor-line-container">
-        <svg viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid meet">
-          <path d={ekgPath} className="monitor-flatline" />
-          <path
-            d={ekgPath}
-            className="monitor-pulse-line"
-            style={{
-              strokeDasharray: '150 2500',
-              animation: `monitorPulse ${PULSE_SPEED}s linear infinite`,
-            }}
-          />
-          <circle r="4" className="monitor-dot">
-            <animateMotion
-              dur={`${PULSE_SPEED}s`}
-              repeatCount="indefinite"
-              path={ekgPath}
-            />
-          </circle>
-        </svg>
-      </div>
-    </div>
-  )
-}
 
 function App() {
   const [currentEP, setCurrentEP] = useState(0)
@@ -133,8 +17,8 @@ function App() {
   const [autoPlay, setAutoPlay] = useState(true)
 
   const audioRef = useRef<HTMLAudioElement>(null)
-  const progressIntervalRef = useRef<NodeJS.Timeout>()
-  const autoPlayTimeoutRef = useRef<NodeJS.Timeout>()
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval>>()
+  const autoPlayTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
 
   const currentTheme = EP_THEMES[currentEP]
   const currentTrackData = currentTheme.tracks[currentTrack]
@@ -145,7 +29,7 @@ function App() {
     setCurrentTrack(0)
     setStoryProgress(0)
     setIsPlaying(false)
-    setAutoPlay(false) // Pause auto-advance when user manually navigates
+    setAutoPlay(false)
   }
 
   // Switch to previous EP
@@ -154,7 +38,7 @@ function App() {
     setCurrentTrack(0)
     setStoryProgress(0)
     setIsPlaying(false)
-    setAutoPlay(false) // Pause auto-advance when user manually navigates
+    setAutoPlay(false)
   }
 
   // Auto-advance carousel
@@ -197,7 +81,7 @@ function App() {
         audioRef.current.pause()
       } else {
         audioRef.current.play()
-        setAutoPlay(false) // Pause auto-advance when music starts playing
+        setAutoPlay(false)
       }
       setIsPlaying(!isPlaying)
     }
@@ -206,7 +90,7 @@ function App() {
   // Click artwork to play first track
   const handleArtworkClick = () => {
     setCurrentTrack(0)
-    setAutoPlay(false) // Pause auto-advance
+    setAutoPlay(false)
     if (audioRef.current) {
       audioRef.current.play()
       setIsPlaying(true)
@@ -247,19 +131,7 @@ function App() {
 
   return (
     <div className="app" data-theme={currentTheme.id}>
-      {/* Story Progress Bars */}
-      <div className="story-progress">
-        {EP_THEMES.map((ep, index) => (
-          <div key={ep.id} className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{
-                width: index < currentEP ? '100%' : index === currentEP ? `${storyProgress}%` : '0%',
-              }}
-            />
-          </div>
-        ))}
-      </div>
+      <StoryProgress eps={EP_THEMES} currentEP={currentEP} storyProgress={storyProgress} />
 
       {/* Navigation Areas */}
       <div className="nav-area prev" onClick={prevEP} />
@@ -330,43 +202,19 @@ function App() {
         </div>
       </div>
 
-      {/* Player bar */}
-      <div className="player-bar">
-        <div className="player-controls">
-          <button className="player-btn" onClick={prevTrack}>
-            ⏮
-          </button>
-          <button className="player-btn" onClick={togglePlay}>
-            {isPlaying ? '⏸' : '▶'}
-          </button>
-          <button className="player-btn" onClick={nextTrack}>
-            ⏭
-          </button>
-        </div>
-
-        <div className="track-info">
-          <div className="track-name">
-            {String(currentTrack + 1).padStart(2, '0')} — {currentTrackData.name}
-          </div>
-          <div className="track-progress">
-            <div className="track-progress-fill" style={{ width: `${progress}%` }} />
-          </div>
-        </div>
-
-        <div className="volume-control">
-          <span className="volume-icon">◈</span>
-          <input
-            type="range"
-            className="volume-slider"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={(e) => setVolume(Number(e.target.value))}
-          />
-        </div>
-
-        <audio ref={audioRef} src={currentTrackData.file} />
-      </div>
+      <PlayerBar
+        ref={audioRef}
+        trackNumber={currentTrack + 1}
+        trackName={currentTrackData.name}
+        trackFile={currentTrackData.file}
+        isPlaying={isPlaying}
+        progress={progress}
+        volume={volume}
+        onTogglePlay={togglePlay}
+        onNextTrack={nextTrack}
+        onPrevTrack={prevTrack}
+        onVolumeChange={setVolume}
+      />
 
       {/* Auto-play toggle */}
       <button
