@@ -91,6 +91,7 @@ function App() {
     setCurrentTrack(0)
     setStoryProgress(0)
     setIsPlaying(false)
+    setAutoPlay(false) // Pause auto-advance when user manually navigates
   }
 
   // Switch to previous EP
@@ -99,6 +100,7 @@ function App() {
     setCurrentTrack(0)
     setStoryProgress(0)
     setIsPlaying(false)
+    setAutoPlay(false) // Pause auto-advance when user manually navigates
   }
 
   // Auto-advance carousel
@@ -138,8 +140,19 @@ function App() {
         audioRef.current.pause()
       } else {
         audioRef.current.play()
+        setAutoPlay(false) // Pause auto-advance when music starts playing
       }
       setIsPlaying(!isPlaying)
+    }
+  }
+
+  // Click artwork to play first track
+  const handleArtworkClick = () => {
+    setCurrentTrack(0)
+    setAutoPlay(false) // Pause auto-advance
+    if (audioRef.current) {
+      audioRef.current.play()
+      setIsPlaying(true)
     }
   }
 
@@ -202,7 +215,7 @@ function App() {
 
       {/* Main content */}
       <div className="site-content">
-        <div className="artwork-container">
+        <div className="artwork-container" onClick={handleArtworkClick} style={{ cursor: 'pointer' }}>
           <div className="artwork-glow-outer" />
           <div className="artwork-frame">
             <div className="artwork-image">
@@ -294,13 +307,14 @@ function App() {
         <audio ref={audioRef} src={currentTrackData.file} />
       </div>
 
-      {/* Auto-play toggle (hidden, for development) */}
+      {/* Auto-play toggle */}
       <button
-        className="auto-play-toggle"
+        className={`auto-play-toggle ${!autoPlay ? 'paused' : ''}`}
         onClick={() => setAutoPlay(!autoPlay)}
-        title={autoPlay ? 'Pause auto-advance' : 'Resume auto-advance'}
+        title={autoPlay ? 'Auto-advance enabled' : 'Auto-advance paused - Click to resume'}
       >
-        {autoPlay ? '⏸' : '▶'}
+        <span className="toggle-icon">{autoPlay ? '⏸' : '▶'}</span>
+        <span className="toggle-label">{autoPlay ? 'Auto' : 'Paused'}</span>
       </button>
     </div>
   )

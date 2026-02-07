@@ -157,6 +157,15 @@
   margin: 0 auto 60px auto;
   position: relative;
   text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.artwork-container:hover {
+  transform: scale(1.02);
+}
+
+.artwork-container:active {
+  transform: scale(0.98);
 }
 
 .artwork-glow-outer {
@@ -197,9 +206,14 @@
   max-width: 450px;
   border: 4px solid var(--primary);
   background: #000;
-  transition: border-color 1.5s ease, box-shadow 1.5s ease;
+  transition: border-color 1.5s ease, box-shadow 0.3s ease;
   box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary),
     0 0 60px var(--secondary);
+}
+
+.artwork-container:hover .artwork-frame {
+  box-shadow: 0 0 30px var(--primary), 0 0 60px var(--primary),
+    0 0 90px var(--secondary);
 }
 
 .artwork-image {
@@ -488,29 +502,59 @@
   border: none;
 }
 
-/* Auto-play toggle (hidden dev tool) */
+/* Auto-play toggle */
 .auto-play-toggle {
   position: fixed;
   bottom: 120px;
   right: 20px;
-  width: 40px;
-  height: 40px;
-  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 16px;
+  background: rgba(0, 0, 0, 0.7);
   border: 2px solid var(--primary);
   color: var(--primary);
-  border-radius: 50%;
+  border-radius: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
   z-index: 999;
-  opacity: 0.3;
-  transition: opacity 0.3s, border-color 1.5s ease, color 1.5s ease;
+  opacity: 0.5;
+  transition: all 0.3s, border-color 1.5s ease, color 1.5s ease;
+  backdrop-filter: blur(10px);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .auto-play-toggle:hover {
   opacity: 1;
+  transform: scale(1.05);
+}
+
+.auto-play-toggle.paused {
+  opacity: 0.85;
+  border-color: var(--secondary);
+  color: var(--secondary);
+  box-shadow: 0 0 20px var(--secondary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.toggle-icon {
+  font-size: 14px;
+}
+
+.toggle-label {
+  font-size: 11px;
 }
 
 /* Responsive Design */
@@ -589,7 +633,16 @@
   .auto-play-toggle {
     bottom: 100px;
     right: 15px;
-    width: 35px;
-    height: 35px;
+    padding: 8px 12px;
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .toggle-icon {
+    font-size: 12px;
+  }
+
+  .toggle-label {
+    font-size: 10px;
   }
 }
