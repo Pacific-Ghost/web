@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atmospheric Band Site Playground</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      grid-template-rows: 1fr auto;
+      height: 100vh;
+    }
+
+    .controls {
+      grid-row: 1 / -1;
+      background: #222;
+      padding: 24px;
+      overflow-y: auto;
+      border-right: 1px solid #333;
+    }
+
+    .preview-area {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prompt-output {
+      background: #1a1a1a;
+      border-top: 1px solid #333;
+      padding: 16px 24px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .controls h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 24px 0 12px 0;
+      color: #fff;
+    }
+
+    .controls h2:first-child {
+      margin-top: 0;
+    }
+
+    .control-group {
+      margin-bottom: 16px;
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #aaa;
+    }
+
+    .control-group input[type="range"],
+    .control-group select {
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .control-group input[type="color"] {
+      width: 100%;
+      height: 36px;
+      border: 1px solid #444;
+      background: #2a2a2a;
+      cursor: pointer;
+    }
+
+    .control-group select {
+      padding: 8px;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      color: #e0e0e0;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .control-group input[type="range"] {
+      -webkit-appearance: none;
+      height: 4px;
+      background: #444;
+      border-radius: 2px;
+    }
+
+    .control-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .value-display {
+      font-size: 12px;
+      color: #666;
+      text-align: right;
+    }
+
+    .preset-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .preset-btn {
+      padding: 8px 12px;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      color: #e0e0e0;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .preset-btn:hover {
+      background: #333;
+      border-color: #555;
+    }
+
+    .copy-btn {
+      margin-top: 12px;
+      padding: 10px 16px;
+      background: #0066cc;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: #0052a3;
+    }
+
+    .copy-btn.copied {
+      background: #00aa00;
+    }
+
+    /* Preview styles */
+    #preview {
+      position: relative;
+      height: 100%;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+    }
+
+    /* Base layers */
+    .atmosphere-base {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+
+    .vignette-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .grain-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      opacity: 0.15;
+      z-index: 101;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E");
+    }
+
+    .dust-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      opacity: 0.03;
+      z-index: 102;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='30' r='1' fill='white' opacity='0.3'/%3E%3Ccircle cx='80' cy='50' r='0.5' fill='white' opacity='0.2'/%3E%3Ccircle cx='140' cy='90' r='1.5' fill='white' opacity='0.4'/%3E%3Ccircle cx='60' cy='120' r='0.8' fill='white' opacity='0.3'/%3E%3Ccircle cx='170' cy='160' r='1.2' fill='white' opacity='0.25'/%3E%3Ccircle cx='110' cy='180' r='0.6' fill='white' opacity='0.35'/%3E%3C/svg%3E");
+      background-size: 400px 400px;
+    }
+
+    .light-leak-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      opacity: 0.1;
+      z-index: 99;
+    }
+
+    .site-content {
+      position: relative;
+      min-height: calc(100vh - 80px);
+      padding: 80px 60px 140px 60px;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .artwork-container {
+      max-width: 600px;
+      margin: 0 auto 60px auto;
+      position: relative;
+      text-align: center;
+    }
+
+    .artwork-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 120%;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .artwork-frame {
+      position: relative;
+      display: inline-block;
+      max-width: 500px;
+    }
+
+    .artwork-image {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .artwork-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.3) 100%);
+    }
+
+    .artwork-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+
+    .ep-info {
+      max-width: 700px;
+      margin: 0 auto 80px auto;
+      text-align: center;
+      position: relative;
+    }
+
+    .ep-title {
+      font-size: 56px;
+      margin-bottom: 20px;
+      font-weight: 400;
+      position: relative;
+      line-height: 1.2;
+    }
+
+    .ep-description {
+      font-size: 18px;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      opacity: 0.75;
+    }
+
+    .links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .link-btn {
+      padding: 12px 28px;
+      background: transparent;
+      border: 1px solid currentColor;
+      color: inherit;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s;
+      display: inline-block;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    /* Player bar */
+    .player-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      z-index: 1000;
+      backdrop-filter: blur(20px);
+    }
+
+    .player-controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .player-btn {
+      width: 36px;
+      height: 36px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .player-btn:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .track-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .track-name {
+      font-size: 15px;
+      font-weight: 400;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.5px;
+    }
+
+    .track-progress {
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .track-progress-fill {
+      height: 100%;
+      background: white;
+      width: 35%;
+      transition: width 0.1s;
+    }
+
+    .volume-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 140px;
+    }
+
+    .volume-slider {
+      width: 100px;
+      height: 2px;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1px;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="controls">
+      <h2>Presets</h2>
+      <div class="preset-buttons">
+        <button class="preset-btn" onclick="loadPreset('midnight')">Midnight Blue</button>
+        <button class="preset-btn" onclick="loadPreset('sunset')">Faded Sunset</button>
+        <button class="preset-btn" onclick="loadPreset('nocturne')">Deep Nocturne</button>
+        <button class="preset-btn" onclick="loadPreset('haze')">Purple Haze</button>
+      </div>
+
+      <h2>Color Atmosphere</h2>
+      <div class="control-group">
+        <label>Primary Background</label>
+        <input type="color" id="bgColor" oninput="updateState('bgColor', this.value)">
+      </div>
+      <div class="control-group">
+        <label>Secondary/Gradient</label>
+        <input type="color" id="bgGradient" oninput="updateState('bgGradient', this.value)">
+      </div>
+      <div class="control-group">
+        <label>Text Color</label>
+        <input type="color" id="textColor" oninput="updateState('textColor', this.value)">
+      </div>
+      <div class="control-group">
+        <label>Accent/Glow Color</label>
+        <input type="color" id="glowColor" oninput="updateState('glowColor', this.value)">
+      </div>
+
+      <h2>Atmospheric Effects</h2>
+      <div class="control-group">
+        <label>Vignette Intensity</label>
+        <input type="range" id="vignetteIntensity" min="0" max="100" oninput="updateState('vignetteIntensity', this.value)">
+        <div class="value-display" id="vignetteValue">60</div>
+      </div>
+      <div class="control-group">
+        <label>Film Grain</label>
+        <input type="range" id="grainIntensity" min="0" max="100" oninput="updateState('grainIntensity', this.value)">
+        <div class="value-display" id="grainValue">70</div>
+      </div>
+      <div class="control-group">
+        <label>Light Leak Intensity</label>
+        <input type="range" id="lightLeakIntensity" min="0" max="100" oninput="updateState('lightLeakIntensity', this.value)">
+        <div class="value-display" id="lightLeakValue">40</div>
+      </div>
+      <div class="control-group">
+        <label>Dust/Particles</label>
+        <input type="range" id="dustIntensity" min="0" max="100" oninput="updateState('dustIntensity', this.value)">
+        <div class="value-display" id="dustValue">30</div>
+      </div>
+
+      <h2>Blur & Softness</h2>
+      <div class="control-group">
+        <label>Overall Blur</label>
+        <input type="range" id="overallBlur" min="0" max="10" step="0.5" oninput="updateState('overallBlur', this.value)">
+        <div class="value-display" id="blurValue">0px</div>
+      </div>
+      <div class="control-group">
+        <label>Text Glow/Halo</label>
+        <input type="range" id="textGlow" min="0" max="50" oninput="updateState('textGlow', this.value)">
+        <div class="value-display" id="textGlowValue">0</div>
+      </div>
+      <div class="control-group">
+        <label>Artwork Glow</label>
+        <input type="range" id="artworkGlow" min="0" max="100" oninput="updateState('artworkGlow', this.value)">
+        <div class="value-display" id="artworkGlowValue">50</div>
+      </div>
+      <div class="control-group">
+        <label>Chromatic Aberration</label>
+        <input type="range" id="chromaticAberration" min="0" max="10" oninput="updateState('chromaticAberration', this.value)">
+        <div class="value-display" id="chromaticValue">0px</div>
+      </div>
+
+      <h2>Typography</h2>
+      <div class="control-group">
+        <label>Heading Font</label>
+        <select id="headingFont" onchange="updateState('headingFont', this.value)">
+          <option value="'Futura', 'Century Gothic', sans-serif">Futura (geometric)</option>
+          <option value="'Didot', 'Bodoni MT', serif">Didot (elegant serif)</option>
+          <option value="'Palatino Linotype', 'Book Antiqua', serif">Palatino (classic)</option>
+          <option value="'Impact', sans-serif">Impact (bold)</option>
+          <option value="'Courier New', monospace">Courier (typewriter)</option>
+          <option value="'Helvetica Neue', 'Arial', sans-serif">Helvetica (clean)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Heading Weight</label>
+        <select id="headingWeight" onchange="updateState('headingWeight', this.value)">
+          <option value="200">Ultra Light</option>
+          <option value="300">Light</option>
+          <option value="400">Normal</option>
+          <option value="500">Medium</option>
+          <option value="600">Semibold</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Heading Letter Spacing</label>
+        <input type="range" id="headingSpacing" min="-2" max="15" step="0.5" oninput="updateState('headingSpacing', this.value)">
+        <div class="value-display" id="headingSpacingValue">0px</div>
+      </div>
+      <div class="control-group">
+        <label>Body Font</label>
+        <select id="bodyFont" onchange="updateState('bodyFont', this.value)">
+          <option value="'Palatino Linotype', 'Book Antiqua', serif">Palatino (classic)</option>
+          <option value="Georgia, serif">Georgia (web serif)</option>
+          <option value="'Hoefler Text', Baskerville, serif">Baskerville</option>
+          <option value="'Helvetica Neue', 'Arial', sans-serif">Helvetica</option>
+          <option value="'Verdana', Geneva, sans-serif">Verdana</option>
+        </select>
+      </div>
+
+      <h2>Player Bar</h2>
+      <div class="control-group">
+        <label>Player Blur</label>
+        <input type="range" id="playerBlur" min="0" max="40" oninput="updateState('playerBlur', this.value)">
+        <div class="value-display" id="playerBlurValue">20px</div>
+      </div>
+      <div class="control-group">
+        <label>Player Opacity</label>
+        <input type="range" id="playerOpacity" min="50" max="100" oninput="updateState('playerOpacity', this.value)">
+        <div class="value-display" id="playerOpacityValue">80%</div>
+      </div>
+    </div>
+
+    <div class="preview-area">
+      <div id="preview">
+        <div class="atmosphere-base"></div>
+        <div class="vignette-layer"></div>
+        <div class="grain-layer"></div>
+        <div class="dust-layer"></div>
+        <div class="light-leak-layer"></div>
+
+        <div class="site-content">
+          <div class="artwork-container">
+            <div class="artwork-glow"></div>
+            <div class="artwork-frame">
+              <div class="artwork-image">
+                <span style="position: relative; z-index: 1; opacity: 0.4;">♪</span>
+              </div>
+              <div class="artwork-overlay"></div>
+            </div>
+          </div>
+
+          <div class="ep-info">
+            <h1 class="ep-title">Midnight Reverb</h1>
+            <p class="ep-description">
+              Five tracks recorded in a basement during the longest winter.<br>
+              Reverb-soaked guitars and whispered vocals that sound like faded polaroids feel.
+            </p>
+            <div class="links">
+              <a href="#" class="link-btn">SPOTIFY</a>
+              <a href="#" class="link-btn">APPLE MUSIC</a>
+              <a href="#" class="link-btn">BANDCAMP</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="player-bar">
+          <div class="player-controls">
+            <button class="player-btn">⏮</button>
+            <button class="player-btn">▶</button>
+            <button class="player-btn">⏭</button>
+          </div>
+          <div class="track-info">
+            <div class="track-name">1. Fading Streetlights</div>
+            <div class="track-progress">
+              <div class="track-progress-fill"></div>
+            </div>
+          </div>
+          <div class="volume-control">
+            <span style="opacity: 0.5; font-size: 14px;">🔊</span>
+            <input type="range" class="volume-slider" min="0" max="100" value="70">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-output">
+      <div id="prompt">Loading...</div>
+      <button class="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULTS = {
+      bgColor: '#1a2332',
+      bgGradient: '#2d1f3d',
+      textColor: '#e8e4df',
+      glowColor: '#6b8cce',
+      vignetteIntensity: 60,
+      grainIntensity: 70,
+      lightLeakIntensity: 40,
+      dustIntensity: 30,
+      overallBlur: 0,
+      textGlow: 0,
+      artworkGlow: 50,
+      chromaticAberration: 0,
+      headingFont: "'Futura', 'Century Gothic', sans-serif",
+      headingWeight: '300',
+      headingSpacing: '3',
+      bodyFont: "'Palatino Linotype', 'Book Antiqua', serif",
+      playerBlur: 20,
+      playerOpacity: 80
+    };
+
+    const state = { ...DEFAULTS };
+
+    const PRESETS = {
+      midnight: {
+        bgColor: '#1a2332',
+        bgGradient: '#2d1f3d',
+        textColor: '#e8e4df',
+        glowColor: '#6b8cce',
+        vignetteIntensity: 70,
+        grainIntensity: 80,
+        lightLeakIntensity: 30,
+        dustIntensity: 40,
+        overallBlur: 1,
+        textGlow: 8,
+        artworkGlow: 60,
+        chromaticAberration: 2,
+        headingFont: "'Futura', 'Century Gothic', sans-serif",
+        headingWeight: '300',
+        headingSpacing: '8',
+        playerBlur: 30
+      },
+      sunset: {
+        bgColor: '#3d2a2e',
+        bgGradient: '#5a3f4f',
+        textColor: '#f5e6d3',
+        glowColor: '#e89b6f',
+        vignetteIntensity: 80,
+        grainIntensity: 90,
+        lightLeakIntensity: 60,
+        dustIntensity: 50,
+        overallBlur: 2,
+        textGlow: 12,
+        artworkGlow: 80,
+        chromaticAberration: 3,
+        headingFont: "'Didot', 'Bodoni MT', serif",
+        headingWeight: '300',
+        headingSpacing: '5',
+        playerBlur: 35
+      },
+      nocturne: {
+        bgColor: '#0f1419',
+        bgGradient: '#1a1f2e',
+        textColor: '#c8ccd4',
+        glowColor: '#4a5c7a',
+        vignetteIntensity: 90,
+        grainIntensity: 60,
+        lightLeakIntensity: 20,
+        dustIntensity: 20,
+        overallBlur: 0.5,
+        textGlow: 5,
+        artworkGlow: 40,
+        chromaticAberration: 1,
+        headingFont: "'Helvetica Neue', 'Arial', sans-serif",
+        headingWeight: '200',
+        headingSpacing: '12',
+        playerBlur: 25
+      },
+      haze: {
+        bgColor: '#2a1f3d',
+        bgGradient: '#3f2f52',
+        textColor: '#e4d5f0',
+        glowColor: '#a67fb5',
+        vignetteIntensity: 75,
+        grainIntensity: 85,
+        lightLeakIntensity: 50,
+        dustIntensity: 45,
+        overallBlur: 3,
+        textGlow: 15,
+        artworkGlow: 90,
+        chromaticAberration: 4,
+        headingFont: "'Palatino Linotype', 'Book Antiqua', serif",
+        headingWeight: '400',
+        headingSpacing: '2',
+        playerBlur: 40
+      }
+    };
+
+    function updateState(key, value) {
+      state[key] = value;
+      updateAll();
+    }
+
+    function loadPreset(name) {
+      Object.assign(state, PRESETS[name]);
+      syncControls();
+      updateAll();
+    }
+
+    function syncControls() {
+      document.getElementById('bgColor').value = state.bgColor;
+      document.getElementById('bgGradient').value = state.bgGradient;
+      document.getElementById('textColor').value = state.textColor;
+      document.getElementById('glowColor').value = state.glowColor;
+      document.getElementById('vignetteIntensity').value = state.vignetteIntensity;
+      document.getElementById('grainIntensity').value = state.grainIntensity;
+      document.getElementById('lightLeakIntensity').value = state.lightLeakIntensity;
+      document.getElementById('dustIntensity').value = state.dustIntensity;
+      document.getElementById('overallBlur').value = state.overallBlur;
+      document.getElementById('textGlow').value = state.textGlow;
+      document.getElementById('artworkGlow').value = state.artworkGlow;
+      document.getElementById('chromaticAberration').value = state.chromaticAberration;
+      document.getElementById('headingFont').value = state.headingFont;
+      document.getElementById('headingWeight').value = state.headingWeight;
+      document.getElementById('headingSpacing').value = state.headingSpacing;
+      document.getElementById('bodyFont').value = state.bodyFont;
+      document.getElementById('playerBlur').value = state.playerBlur;
+      document.getElementById('playerOpacity').value = state.playerOpacity;
+    }
+
+    function updateAll() {
+      renderPreview();
+      updatePrompt();
+      updateValueDisplays();
+    }
+
+    function updateValueDisplays() {
+      document.getElementById('vignetteValue').textContent = state.vignetteIntensity;
+      document.getElementById('grainValue').textContent = state.grainIntensity;
+      document.getElementById('lightLeakValue').textContent = state.lightLeakIntensity;
+      document.getElementById('dustValue').textContent = state.dustIntensity;
+      document.getElementById('blurValue').textContent = state.overallBlur + 'px';
+      document.getElementById('textGlowValue').textContent = state.textGlow;
+      document.getElementById('artworkGlowValue').textContent = state.artworkGlow;
+      document.getElementById('chromaticValue').textContent = state.chromaticAberration + 'px';
+      document.getElementById('headingSpacingValue').textContent = state.headingSpacing + 'px';
+      document.getElementById('playerBlurValue').textContent = state.playerBlur + 'px';
+      document.getElementById('playerOpacityValue').textContent = state.playerOpacity + '%';
+    }
+
+    function renderPreview() {
+      const preview = document.getElementById('preview');
+      const atmosphereBase = preview.querySelector('.atmosphere-base');
+      const vignette = preview.querySelector('.vignette-layer');
+      const grain = preview.querySelector('.grain-layer');
+      const dust = preview.querySelector('.dust-layer');
+      const lightLeak = preview.querySelector('.light-leak-layer');
+      const siteContent = preview.querySelector('.site-content');
+      const playerBar = preview.querySelector('.player-bar');
+      const artworkGlow = preview.querySelector('.artwork-glow');
+      const artworkOverlay = preview.querySelector('.artwork-overlay');
+
+      // Background gradient
+      atmosphereBase.style.background = `radial-gradient(ellipse at center top, ${state.bgColor} 0%, ${state.bgGradient} 100%)`;
+
+      // Text color
+      preview.style.color = state.textColor;
+
+      // Typography
+      document.querySelectorAll('.ep-title').forEach(el => {
+        el.style.fontFamily = state.headingFont;
+        el.style.fontWeight = state.headingWeight;
+        el.style.letterSpacing = state.headingSpacing + 'px';
+
+        // Text glow
+        if (state.textGlow > 0) {
+          el.style.textShadow = `0 0 ${state.textGlow}px ${state.glowColor}, 0 0 ${state.textGlow * 2}px ${state.glowColor}`;
+        } else {
+          el.style.textShadow = 'none';
+        }
+      });
+
+      siteContent.style.fontFamily = state.bodyFont;
+
+      // Overall blur
+      if (state.overallBlur > 0) {
+        siteContent.style.filter = `blur(${state.overallBlur}px)`;
+      } else {
+        siteContent.style.filter = 'none';
+      }
+
+      // Vignette
+      const vignetteOpacity = state.vignetteIntensity / 100 * 0.8;
+      vignette.style.background = `radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,${vignetteOpacity}) 100%)`;
+
+      // Grain
+      grain.style.opacity = state.grainIntensity / 100 * 0.25;
+
+      // Dust
+      dust.style.opacity = state.dustIntensity / 100 * 0.08;
+
+      // Light leak
+      const lightLeakOpacity = state.lightLeakIntensity / 100;
+      const lightLeakColor = state.glowColor;
+      lightLeak.style.background = `
+        radial-gradient(ellipse at top right, ${hexToRgba(lightLeakColor, lightLeakOpacity * 0.3)} 0%, transparent 50%),
+        radial-gradient(ellipse at bottom left, ${hexToRgba(lightLeakColor, lightLeakOpacity * 0.2)} 0%, transparent 50%)
+      `;
+
+      // Artwork glow
+      if (state.artworkGlow > 0) {
+        artworkGlow.style.background = `radial-gradient(circle, ${hexToRgba(state.glowColor, state.artworkGlow / 100 * 0.4)} 0%, transparent 70%)`;
+        artworkGlow.style.filter = `blur(${state.artworkGlow / 2}px)`;
+      } else {
+        artworkGlow.style.background = 'transparent';
+      }
+
+      // Chromatic aberration on artwork
+      if (state.chromaticAberration > 0) {
+        const shift = state.chromaticAberration;
+        artworkOverlay.style.background = `
+          radial-gradient(circle at center, transparent 40%, ${hexToRgba('#ff0000', 0.05)} 100%),
+          radial-gradient(circle at calc(50% + ${shift}px) 50%, transparent 40%, ${hexToRgba('#00ff00', 0.05)} 100%),
+          radial-gradient(circle at calc(50% - ${shift}px) 50%, transparent 40%, ${hexToRgba('#0000ff', 0.05)} 100%)
+        `;
+      } else {
+        artworkOverlay.style.background = 'transparent';
+      }
+
+      // Player bar
+      const playerOpacity = state.playerOpacity / 100;
+      playerBar.style.background = `rgba(20, 20, 30, ${playerOpacity})`;
+      playerBar.style.backdropFilter = `blur(${state.playerBlur}px)`;
+
+      // Link buttons
+      document.querySelectorAll('.link-btn').forEach(el => {
+        el.style.borderColor = hexToRgba(state.textColor, 0.3);
+        if (state.textGlow > 0) {
+          el.style.boxShadow = `0 0 ${state.textGlow / 2}px ${hexToRgba(state.glowColor, 0.3)}`;
+        } else {
+          el.style.boxShadow = 'none';
+        }
+      });
+    }
+
+    function hexToRgba(hex, alpha) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function updatePrompt() {
+      const parts = [];
+
+      // Describe the atmosphere
+      parts.push('Create an atmospheric, melancholic band website with a dream pop/shoegaze aesthetic');
+
+      // Colors
+      const colorDesc = [];
+      if (state.bgColor !== DEFAULTS.bgColor) {
+        colorDesc.push(`${getColorMood(state.bgColor)} background with gradient to ${getColorMood(state.bgGradient)}`);
+      }
+      if (colorDesc.length > 0) {
+        parts.push(`Colors: ${colorDesc.join(', ')}`);
+      }
+
+      // Atmospheric effects
+      const effects = [];
+      if (state.vignetteIntensity > 70) effects.push('heavy vignette darkening edges');
+      else if (state.vignetteIntensity > 40) effects.push('subtle vignette');
+
+      if (state.grainIntensity > 70) effects.push('prominent film grain');
+      else if (state.grainIntensity > 40) effects.push('film grain texture');
+
+      if (state.lightLeakIntensity > 50) effects.push('strong light leaks in corners');
+      else if (state.lightLeakIntensity > 20) effects.push('subtle light leaks');
+
+      if (state.dustIntensity > 40) effects.push('visible dust particles');
+
+      if (effects.length > 0) {
+        parts.push(`Atmospheric layers: ${effects.join(', ')}`);
+      }
+
+      // Blur and softness
+      const softness = [];
+      if (state.overallBlur > 2) softness.push('heavy soft focus blur on content');
+      else if (state.overallBlur > 0) softness.push('subtle soft focus');
+
+      if (state.textGlow > 10) softness.push('prominent glowing text halos');
+      else if (state.textGlow > 0) softness.push('soft text glow');
+
+      if (state.artworkGlow > 70) softness.push('strong artwork glow/halo');
+      else if (state.artworkGlow > 30) softness.push('subtle artwork glow');
+
+      if (state.chromaticAberration > 2) softness.push('chromatic aberration on artwork');
+
+      if (softness.length > 0) {
+        parts.push(`Soft effects: ${softness.join(', ')}`);
+      }
+
+      // Typography
+      const headingFontName = state.headingFont.split(',')[0].replace(/['"]/g, '');
+      const bodyFontName = state.bodyFont.split(',')[0].replace(/['"]/g, '');
+
+      const typoDesc = [`${headingFontName} ${state.headingWeight}-weight headings with ${state.headingSpacing}px letter spacing`];
+      typoDesc.push(`${bodyFontName} for body text`);
+      parts.push(`Typography: ${typoDesc.join(', ')}`);
+
+      // Player
+      const playerDesc = state.playerBlur > 30 ? 'heavily blurred' : state.playerBlur > 15 ? 'softly blurred' : 'subtle';
+      parts.push(`Fixed bottom player bar with ${playerDesc} backdrop (${state.playerOpacity}% opacity)`);
+
+      // Layout
+      parts.push('Layout: Centered EP artwork with atmospheric glow, title/description below, streaming links, all scrollable above fixed player');
+
+      const prompt = parts.join('. ') + '.';
+      document.getElementById('prompt').textContent = prompt;
+    }
+
+    function getColorMood(hex) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+
+      const lightness = (r + g + b) / 3;
+
+      if (r > g && r > b) return lightness < 80 ? 'dark warm' : 'warm';
+      if (b > r && b > g) return lightness < 80 ? 'deep blue' : 'cool blue';
+      if (g > 120 && r < 100 && b < 100) return 'green-tinted';
+      if (Math.abs(r - g) < 30 && Math.abs(g - b) < 30) {
+        if (lightness < 40) return 'very dark';
+        if (lightness < 80) return 'muted neutral';
+        return 'light neutral';
+      }
+
+      return lightness < 80 ? 'dark moody' : 'atmospheric';
+    }
+
+    function copyPrompt() {
+      const prompt = document.getElementById('prompt').textContent;
+      navigator.clipboard.writeText(prompt).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy Prompt';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Initialize
+    syncControls();
+    updateAll();
+  </script>
+</body>
+</html>
