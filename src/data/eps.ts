@@ -62,3 +62,22 @@ export const EP_THEMES: EPTheme[] = [
     ],
   },
 ]
+
+export function getEPIndex(id: string): number {
+  const index = EP_THEMES.findIndex((ep) => ep.id === id)
+  return index === -1 ? 0 : index
+}
+
+export function getEPById(id: string): EPTheme {
+  return EP_THEMES.find((ep) => ep.id === id) ?? EP_THEMES[0]
+}
+
+export function getNextEPId(id: string): string {
+  const index = getEPIndex(id)
+  return EP_THEMES[(index + 1) % EP_THEMES.length].id
+}
+
+export function getPrevEPId(id: string): string {
+  const index = getEPIndex(id)
+  return EP_THEMES[(index - 1 + EP_THEMES.length) % EP_THEMES.length].id
+}
