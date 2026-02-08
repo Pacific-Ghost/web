@@ -45,6 +45,29 @@ Single-page React app built with Vite. The carousel auto-advances between EP sli
 
 React 18, TypeScript, Vite (with SWC plugin), Vitest + Testing Library
 
+## Infrastructure & Deployment
+
+### AWS Resources
+- **S3**: `www.pacificghost.fm` bucket hosts the static site; `pacificghost.fm` bucket redirects to `www`
+- **CloudFront**: Distribution serves the S3 bucket with custom error responses (403/404 → `index.html`) for SPA routing
+- **Route53**: Hosted zone for `pacificghost.fm`
+
+### CDK Stack
+The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeScript).
+- `npx cdk diff` — preview changes
+- `npx cdk deploy` — deploy (requires AWS credentials)
+
+### GitHub Actions Deploy Pipeline
+`.github/workflows/deploy.yml` triggers on push to `main`:
+1. Installs dependencies and builds (`npm ci && npm run build`)
+2. Syncs `dist/` to S3
+3. Invalidates CloudFront cache
+
+**Required GitHub Secrets:**
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `PG_WEBSITE_CF_DISTRO_ID` — CloudFront distribution ID
+
 ## Common Development Tasks
 
 - Use `ReturnType<typeof setTimeout>` for timer refs — `@types/node` is not installed, so `NodeJS.Timeout` won't compile
