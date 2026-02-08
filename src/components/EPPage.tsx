@@ -1,0 +1,70 @@
+import { EPTheme } from '../data/eps'
+import { HeartbeatTitle } from './HeartbeatTitle'
+
+interface EPPageProps {
+  theme: EPTheme
+  onArtworkClick: () => void
+}
+
+export function EPPage({ theme, onArtworkClick }: EPPageProps) {
+  return (
+    <div className="site-content">
+      <div className="artwork-container" onClick={onArtworkClick} style={{ cursor: 'pointer' }}>
+        <div className="artwork-glow-outer" />
+        <div className="artwork-frame">
+          <div className="artwork-image">
+            <div className="artwork-pattern" />
+            <div className="artwork-icon">{theme.icon}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="ep-info">
+        <div className="ep-subtitle">PACIFIC GHOST</div>
+        {theme.id === 'lovesickage' ? (
+          <HeartbeatTitle text={theme.name} />
+        ) : (
+          <h1 className="ep-title">{theme.name}</h1>
+        )}
+        <div className={`ep-status ${theme.statusType}`}>{theme.status}</div>
+        <p className="ep-description">
+          {theme.description.map((line, i) => (
+            <span key={i}>
+              {line}
+              {i < theme.description.length - 1 && <br />}
+            </span>
+          ))}
+        </p>
+        <div className="links">
+          {theme.statusType === 'coming' ? (
+            <>
+              <a href="#" className="link-btn">
+                <span className="link-icon">◈</span>
+                <span>Pre-Save</span>
+              </a>
+              <a href="#" className="link-btn">
+                <span className="link-icon">♪</span>
+                <span>Follow</span>
+              </a>
+            </>
+          ) : (
+            <>
+              <a href="#" className="link-btn">
+                <span className="link-icon">▶</span>
+                <span>Spotify</span>
+              </a>
+              <a href="#" className="link-btn">
+                <span className="link-icon">♪</span>
+                <span>Apple Music</span>
+              </a>
+              <a href="#" className="link-btn">
+                <span className="link-icon">◆</span>
+                <span>Bandcamp</span>
+              </a>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

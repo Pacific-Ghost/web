@@ -1,45 +1,98 @@
 import { useState, useRef, useEffect } from 'react'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import './App.css'
-import { EP_THEMES } from './data/eps'
-import { HeartbeatTitle } from './components/HeartbeatTitle'
+import { EP_THEMES, getEPIndex, getEPById, getNextEPId, getPrevEPId } from './data/eps'
 import { StoryProgress } from './components/StoryProgress'
 import { PlayerBar } from './components/PlayerBar'
+import { EPPage } from './components/EPPage'
 
 const SLIDE_DURATION = 10000 // 10 seconds
 
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+  }),
+  center: {
+    x: 0,
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? '-100%' : '100%',
+  }),
+}
+
+const slideTransition = {
+  type: 'tween',
+  duration: 0.35,
+  ease: 'easeInOut',
+} as const
+
 function App() {
-  const [currentEP, setCurrentEP] = useState(0)
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const epId = id ?? EP_THEMES[0].id
+  const currentEPIndex = getEPIndex(epId)
+  const currentTheme = getEPById(epId)
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTrack, setCurrentTrack] = useState(0)
   const [progress, setProgress] = useState(0)
   const [storyProgress, setStoryProgress] = useState(0)
   const [volume, setVolume] = useState(70)
-  const [autoPlay, setAutoPlay] = useState(true)
+  const [autoPlay, setAutoPlay] = useState(() => {
+    return location.state?.fromRoot === true
+  })
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const progressIntervalRef = useRef<ReturnType<typeof setInterval>>()
   const autoPlayTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const prevIndexRef = useRef(currentEPIndex)
+  const directionRef = useRef(0)
 
-  const currentTheme = EP_THEMES[currentEP]
-  const currentTrackData = currentTheme.tracks[currentTrack]
+  // Compute direction synchronously so it's available before AnimatePresence renders
+  if (prevIndexRef.current !== currentEPIndex) {
+    const len = EP_THEMES.length
+    const forwardDist = (currentEPIndex - prevIndexRef.current + len) % len
+    const backwardDist = (prevIndexRef.current - currentEPIndex + len) % len
+    directionRef.current = forwardDist <= backwardDist ? 1 : -1
+    prevIndexRef.current = currentEPIndex
+  }
 
-  // Switch to next EP
+  // Navigate to next EP
   const nextEP = () => {
-    setCurrentEP((prev) => (prev + 1) % EP_THEMES.length)
+    const nextId = getNextEPId(epId)
     setCurrentTrack(0)
-    setStoryProgress(0)
+    setStoryProgress(100)
     setIsPlaying(false)
     setAutoPlay(false)
+    navigate(`/ep/${nextId}`)
   }
 
-  // Switch to previous EP
+  // Navigate to previous EP
   const prevEP = () => {
-    setCurrentEP((prev) => (prev - 1 + EP_THEMES.length) % EP_THEMES.length)
+    const prevId = getPrevEPId(epId)
     setCurrentTrack(0)
-    setStoryProgress(0)
+    setStoryProgress(100)
     setIsPlaying(false)
     setAutoPlay(false)
+    navigate(`/ep/${prevId}`)
   }
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        nextEP()
+      } else if (e.key === 'ArrowLeft') {
+        prevEP()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  })
 
   // Auto-advance carousel
   useEffect(() => {
@@ -62,17 +115,18 @@ function App() {
     }, 100)
 
     autoPlayTimeoutRef.current = setTimeout(() => {
-      setCurrentEP((prev) => (prev + 1) % EP_THEMES.length)
+      const nextId = getNextEPId(epId)
       setCurrentTrack(0)
       setStoryProgress(0)
       setIsPlaying(false)
+      navigate(`/ep/${nextId}`, { state: { fromRoot: true } })
     }, SLIDE_DURATION)
 
     return () => {
       if (progressIntervalRef.current) clearInterval(progressIntervalRef.current)
       if (autoPlayTimeoutRef.current) clearTimeout(autoPlayTimeoutRef.current)
     }
-  }, [currentEP, autoPlay])
+  }, [epId, autoPlay, navigate])
 
   // Audio controls
   const togglePlay = () => {
@@ -129,9 +183,11 @@ function App() {
     return () => audio.removeEventListener('timeupdate', updateProgress)
   }, [])
 
+  const currentTrackData = currentTheme.tracks[currentTrack]
+
   return (
     <div className="app" data-theme={currentTheme.id}>
-      <StoryProgress eps={EP_THEMES} currentEP={currentEP} storyProgress={storyProgress} />
+      <StoryProgress eps={EP_THEMES} currentEP={currentEPIndex} storyProgress={storyProgress} />
 
       {/* Navigation Areas */}
       <div className="nav-area prev" onClick={prevEP} />
@@ -142,64 +198,22 @@ function App() {
       <div className="neon-grid" />
       <div className="grain-layer" />
 
-      {/* Main content */}
-      <div className="site-content">
-        <div className="artwork-container" onClick={handleArtworkClick} style={{ cursor: 'pointer' }}>
-          <div className="artwork-glow-outer" />
-          <div className="artwork-frame">
-            <div className="artwork-image">
-              <div className="artwork-pattern" />
-              <div className="artwork-icon">{currentTheme.icon}</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="ep-info">
-          <div className="ep-subtitle">PACIFIC GHOST</div>
-          {currentTheme.id === 'lovesickage' ? (
-            <HeartbeatTitle text={currentTheme.name} />
-          ) : (
-            <h1 className="ep-title">{currentTheme.name}</h1>
-          )}
-          <div className={`ep-status ${currentTheme.statusType}`}>{currentTheme.status}</div>
-          <p className="ep-description">
-            {currentTheme.description.map((line, i) => (
-              <span key={i}>
-                {line}
-                {i < currentTheme.description.length - 1 && <br />}
-              </span>
-            ))}
-          </p>
-          <div className="links">
-            {currentTheme.statusType === 'coming' ? (
-              <>
-                <a href="#" className="link-btn">
-                  <span className="link-icon">◈</span>
-                  <span>Pre-Save</span>
-                </a>
-                <a href="#" className="link-btn">
-                  <span className="link-icon">♪</span>
-                  <span>Follow</span>
-                </a>
-              </>
-            ) : (
-              <>
-                <a href="#" className="link-btn">
-                  <span className="link-icon">▶</span>
-                  <span>Spotify</span>
-                </a>
-                <a href="#" className="link-btn">
-                  <span className="link-icon">♪</span>
-                  <span>Apple Music</span>
-                </a>
-                <a href="#" className="link-btn">
-                  <span className="link-icon">◆</span>
-                  <span>Bandcamp</span>
-                </a>
-              </>
-            )}
-          </div>
-        </div>
+      {/* Animated slide content */}
+      <div className="slide-container">
+        <AnimatePresence initial={false} mode="popLayout" custom={directionRef.current}>
+          <motion.div
+            key={epId}
+            data-theme={epId}
+            custom={directionRef.current}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={slideTransition}
+          >
+            <EPPage theme={currentTheme} onArtworkClick={handleArtworkClick} />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <PlayerBar
