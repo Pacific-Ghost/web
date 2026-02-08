@@ -19,6 +19,7 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
                 className="artwork-img"
                 src={theme.artwork.jpg}
                 alt={theme.artwork.alt}
+                title={theme.artwork.credit ? `Artwork ${theme.artwork.credit}` : undefined}
                 width={800}
                 height={800}
                 loading="eager"
@@ -31,6 +32,9 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
             </div>
           )}
         </div>
+        {theme.artwork?.credit && (
+          <div className="artwork-credit">Artwork {theme.artwork.credit}</div>
+        )}
       </div>
 
       <div className="ep-info">

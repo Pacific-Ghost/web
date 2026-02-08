@@ -10,7 +10,7 @@ export interface EPTheme {
   secondary: string;
   textColor: string;
   fontFamily: string;
-  artwork?: { webp: string; jpg: string; alt: string };
+  artwork?: { webp: string; jpg: string; alt: string; credit?: string };
   tracks: Array<{ id: number; name: string; file: string }>;
 }
 
@@ -32,6 +32,7 @@ export const EP_THEMES: EPTheme[] = [
       webp: "/artwork/lovesickage.webp",
       jpg: "/artwork/lovesickage.jpg",
       alt: "Love Sick Age EP cover — black impasto heart on dark glitter",
+      credit: "\u00a9 Cynthia Coulombe B\u00e9gin, 2025. Used with permission",
     },
     tracks: [
       { id: 1, name: "Love Sick Age", file: "/audio/track1.mp3" },
@@ -46,15 +47,17 @@ export const EP_THEMES: EPTheme[] = [
     icon: "⬡",
     status: "Stream Now",
     statusType: "available",
-    description: [
-      "Debut EP. Six sun-drenched tracks.",
-      "Hazy guitar walls meet golden hour nostalgia.",
-    ],
+    description: [],
     bgColor: "#1a0a0f",
     primary: "#ff1493",
     secondary: "#ffd700",
     textColor: "#fff5e6",
-    fontFamily: "'Copperplate', 'Copperplate Gothic Light', sans-serif",
+    fontFamily: "'Monoton', cursive",
+    artwork: {
+      webp: "/artwork/thehill.webp",
+      jpg: "/artwork/thehill.jpg",
+      alt: "The Hill EP cover — neon-lit studio with guitar, amps, and pedals bathed in pink light",
+    },
     tracks: [
       { id: 1, name: "Golden Daze", file: "/audio/hill1.mp3" },
       { id: 2, name: "Sunset Drive", file: "/audio/hill2.mp3" },

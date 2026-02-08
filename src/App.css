@@ -15,7 +15,7 @@
   --primary: #ff1493;
   --secondary: #ffd700;
   --text-color: #fff5e6;
-  --heading-font: 'Copperplate', 'Copperplate Gothic Light', sans-serif;
+  --heading-font: 'Monoton', cursive;
 }
 
 .app {
@@ -202,8 +202,8 @@
 [data-theme="thehill"] .artwork-glow-outer {
   background: radial-gradient(
     circle,
-    rgba(255, 20, 147, 0.5) 0%,
-    rgba(255, 215, 0, 0.3) 50%,
+    rgba(255, 20, 147, 0.25) 0%,
+    rgba(255, 215, 0, 0.12) 50%,
     transparent 70%
   );
 }
@@ -228,6 +228,16 @@
   height: auto;
   aspect-ratio: 1;
   object-fit: cover;
+}
+
+.artwork-credit {
+  font-size: 11px;
+  opacity: 0.4;
+  letter-spacing: 1px;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 300;
+  white-space: nowrap;
 }
 
 .artwork-image {
@@ -295,10 +305,10 @@
 }
 
 .ep-subtitle {
-  font-size: 18px;
+  font-size: 22px;
   margin-bottom: 24px;
-  opacity: 0.8;
-  letter-spacing: 6px;
+  opacity: 0.9;
+  letter-spacing: 8px;
   text-transform: uppercase;
   font-weight: 300;
   transition: color 1.5s ease;
@@ -315,6 +325,56 @@
   text-shadow: 0 0 25px var(--primary), 0 0 50px var(--primary),
     0 0 75px var(--secondary);
   transition: text-shadow 1.5s ease, font-family 1.5s ease;
+}
+
+/* The Hill neon sign title */
+[data-theme="thehill"] .ep-title {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  font-size: 72px;
+  color: #fff;
+  text-shadow:
+    0 0 4px #fff,
+    0 0 10px #fff,
+    0 0 20px #fff,
+    0 0 40px #ffd700,
+    0 0 60px #ffd700,
+    0 0 90px rgba(255, 215, 0, 0.5),
+    0 0 140px rgba(255, 215, 0, 0.25);
+  animation: neonFlicker 4s ease-in-out infinite;
+}
+
+@keyframes neonFlicker {
+  0%, 100% {
+    opacity: 1;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 10px #fff,
+      0 0 20px #fff,
+      0 0 40px #ffd700,
+      0 0 60px #ffd700,
+      0 0 90px rgba(255, 215, 0, 0.5),
+      0 0 140px rgba(255, 215, 0, 0.25);
+  }
+  18% { opacity: 1; }
+  19% { opacity: 0.7; }
+  20% { opacity: 1; }
+  21% { opacity: 0.65; }
+  22% { opacity: 1; }
+  50% {
+    text-shadow:
+      0 0 4px #fff,
+      0 0 10px #fff,
+      0 0 16px #fff,
+      0 0 34px #ffd700,
+      0 0 50px #ffd700,
+      0 0 75px rgba(255, 215, 0, 0.4),
+      0 0 110px rgba(255, 215, 0, 0.18);
+  }
+  73% { opacity: 1; }
+  74% { opacity: 0.8; }
+  75% { opacity: 1; }
 }
 
 /* Heartbeat Monitor Title (Love Sick Age) */
@@ -649,6 +709,10 @@
     font-size: 60px;
   }
 
+  [data-theme="thehill"] .ep-title {
+    font-size: 56px;
+  }
+
   .artwork-container {
     max-width: 340px;
   }
@@ -664,9 +728,14 @@
     letter-spacing: 3px;
   }
 
+  [data-theme="thehill"] .ep-title {
+    font-size: 40px;
+    letter-spacing: 0.03em;
+  }
+
   .ep-subtitle {
-    font-size: 16px;
-    letter-spacing: 4px;
+    font-size: 18px;
+    letter-spacing: 5px;
   }
 
   .artwork-container {
