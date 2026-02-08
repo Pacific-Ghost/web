@@ -12,10 +12,24 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
       <div className="artwork-container" onClick={onArtworkClick} style={{ cursor: 'pointer' }}>
         <div className="artwork-glow-outer" />
         <div className="artwork-frame">
-          <div className="artwork-image">
-            <div className="artwork-pattern" />
-            <div className="artwork-icon">{theme.icon}</div>
-          </div>
+          {theme.artwork ? (
+            <picture>
+              <source srcSet={theme.artwork.webp} type="image/webp" />
+              <img
+                className="artwork-img"
+                src={theme.artwork.jpg}
+                alt={theme.artwork.alt}
+                width={800}
+                height={800}
+                loading="eager"
+              />
+            </picture>
+          ) : (
+            <div className="artwork-image">
+              <div className="artwork-pattern" />
+              <div className="artwork-icon">{theme.icon}</div>
+            </div>
+          )}
         </div>
       </div>
 
