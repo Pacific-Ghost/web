@@ -151,7 +151,7 @@
 .site-content {
   position: relative;
   min-height: 100vh;
-  padding: 120px 60px 160px 60px;
+  padding: 60px 60px 120px 60px;
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -161,8 +161,8 @@
 
 /* Artwork Section */
 .artwork-container {
-  max-width: 500px;
-  margin: 0 auto 60px auto;
+  max-width: 380px;
+  margin: 0 auto 36px auto;
   position: relative;
   text-align: center;
   transition: transform 0.3s ease;
@@ -181,20 +181,20 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 140%;
-  height: 140%;
+  width: 120%;
+  height: 120%;
   border-radius: 50%;
   pointer-events: none;
   z-index: -1;
-  filter: blur(60px);
+  filter: blur(50px);
   transition: background 1.5s ease;
 }
 
 [data-theme="lovesickage"] .artwork-glow-outer {
   background: radial-gradient(
     circle,
-    rgba(255, 0, 110, 0.42) 0%,
-    rgba(0, 217, 255, 0.21) 50%,
+    rgba(255, 0, 110, 0.22) 0%,
+    rgba(0, 217, 255, 0.10) 50%,
     transparent 70%
   );
 }
@@ -211,17 +211,23 @@
 .artwork-frame {
   position: relative;
   display: inline-block;
-  max-width: 450px;
-  border: 4px solid var(--primary);
+  max-width: 380px;
+  border: 3px solid var(--primary);
   background: #000;
   transition: border-color 1.5s ease, box-shadow 0.3s ease;
-  box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary),
-    0 0 60px var(--secondary);
+  box-shadow: 0 0 12px var(--primary), 0 0 24px rgba(255, 0, 110, 0.3);
 }
 
 .artwork-container:hover .artwork-frame {
-  box-shadow: 0 0 30px var(--primary), 0 0 60px var(--primary),
-    0 0 90px var(--secondary);
+  box-shadow: 0 0 20px var(--primary), 0 0 40px rgba(255, 0, 110, 0.3);
+}
+
+.artwork-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
 .artwork-image {
@@ -282,7 +288,8 @@
 
 /* EP Info */
 .ep-info {
-  max-width: 700px;
+  width: 100%;
+  max-width: 900px;
   margin: 0 auto;
   text-align: center;
 }
@@ -323,6 +330,7 @@
   font-weight: 400;
   letter-spacing: 0.12em;
   text-align: center;
+  white-space: nowrap;
   position: relative;
   z-index: 2;
   -webkit-text-stroke: 2px var(--primary);
@@ -403,9 +411,12 @@
 }
 
 .ep-description {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 16px;
   line-height: 1.8;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   opacity: 0.7;
   transition: color 1.5s ease;
 }
@@ -639,11 +650,11 @@
   }
 
   .artwork-container {
-    max-width: 450px;
+    max-width: 340px;
   }
 
   .site-content {
-    padding: 100px 40px 140px 40px;
+    padding: 50px 40px 120px 40px;
   }
 }
 
@@ -664,7 +675,7 @@
   }
 
   .site-content {
-    padding: 80px 24px 140px 24px;
+    padding: 50px 24px 120px 24px;
   }
 
   .story-progress {
