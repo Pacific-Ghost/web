@@ -18,6 +18,13 @@
   --heading-font: 'Monoton', cursive;
 }
 
+/* Page transition wrapper */
+.page-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
 .app {
   position: relative;
   min-height: 100vh;
