@@ -230,6 +230,15 @@ function App() {
         onVolumeChange={setVolume}
       />
 
+      {/* Bio page link */}
+      <button
+        className="bio-button"
+        onClick={() => navigate('/bio', { state: { fromEP: epId } })}
+        title="About Pacific Ghost"
+      >
+        &#9432;
+      </button>
+
       {/* Auto-play toggle */}
       <button
         className={`auto-play-toggle ${!autoPlay ? 'paused' : ''}`}
