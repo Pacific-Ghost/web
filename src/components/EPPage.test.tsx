@@ -44,8 +44,9 @@ describe('EPPage', () => {
     expect(getByText('Bandcamp')).not.toBeNull()
   })
 
-  it('renders EP description lines', () => {
-    const { getByText } = render(<EPPage theme={thehill} onArtworkClick={() => {}} />)
+  it('renders EP description lines when present', () => {
+    const withDesc = { ...thehill, description: ['Debut EP. Six sun-drenched tracks.'] }
+    const { getByText } = render(<EPPage theme={withDesc} onArtworkClick={() => {}} />)
     expect(getByText('Debut EP. Six sun-drenched tracks.')).not.toBeNull()
   })
 
