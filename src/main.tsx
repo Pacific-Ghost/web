@@ -6,12 +6,13 @@ import "./index.css"
 import App from "./App.tsx";
 import { BioPage } from "./components/BioPage.tsx";
 
-const pageTransition = {
+const pageVariants = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.6, ease: "easeInOut" },
-} as const
+  exit: { opacity: 0, position: "fixed" as const, inset: 0 },
+}
+
+const pageTransition = { duration: 0.6, ease: "easeInOut" } as const
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -24,7 +25,11 @@ function AnimatedRoutes() {
       <motion.div
         key={routeKey}
         className="page-wrapper"
-        {...pageTransition}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
       >
         <Routes location={location}>
           <Route path="/" element={<Navigate to="/ep/lovesickage" state={{ fromRoot: true }} replace />} />
