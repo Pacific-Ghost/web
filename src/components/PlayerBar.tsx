@@ -11,6 +11,7 @@ interface PlayerBarProps {
   onNextTrack: () => void
   onPrevTrack: () => void
   onVolumeChange: (volume: number) => void
+  onSeek: (percent: number) => void
 }
 
 export const PlayerBar = forwardRef<HTMLAudioElement, PlayerBarProps>(
@@ -26,9 +27,16 @@ export const PlayerBar = forwardRef<HTMLAudioElement, PlayerBarProps>(
       onNextTrack,
       onPrevTrack,
       onVolumeChange,
+      onSeek,
     },
     ref,
   ) => {
+    const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect()
+      const percent = ((e.clientX - rect.left) / rect.width) * 100
+      onSeek(Math.max(0, Math.min(100, percent)))
+    }
+
     return (
       <div className="player-bar">
         <div className="player-controls">
@@ -47,7 +55,7 @@ export const PlayerBar = forwardRef<HTMLAudioElement, PlayerBarProps>(
           <div className="track-name">
             {String(trackNumber).padStart(2, '0')} — {trackName}
           </div>
-          <div className="track-progress">
+          <div className="track-progress" onClick={handleProgressClick}>
             <div className="track-progress-fill" style={{ width: `${progress}%` }} />
           </div>
         </div>
@@ -60,6 +68,7 @@ export const PlayerBar = forwardRef<HTMLAudioElement, PlayerBarProps>(
             min="0"
             max="100"
             value={volume}
+            style={{ '--volume-pct': `${volume}%` } as React.CSSProperties}
             onChange={(e) => onVolumeChange(Number(e.target.value))}
           />
         </div>

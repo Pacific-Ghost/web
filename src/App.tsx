@@ -153,13 +153,33 @@ function App() {
 
   const nextTrack = () => {
     setCurrentTrack((prev) => (prev + 1) % currentTheme.tracks.length)
-    setIsPlaying(false)
+    setProgress(0)
+    setIsPlaying(true)
   }
 
   const prevTrack = () => {
     setCurrentTrack((prev) => (prev - 1 + currentTheme.tracks.length) % currentTheme.tracks.length)
-    setIsPlaying(false)
+    setProgress(0)
+    setIsPlaying(true)
   }
+
+  const seekTo = (percent: number) => {
+    if (audioRef.current && audioRef.current.duration) {
+      audioRef.current.currentTime = (percent / 100) * audioRef.current.duration
+      setProgress(percent)
+    }
+  }
+
+  // When track changes, load and play/pause accordingly
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    audio.load()
+    if (isPlaying) {
+      audio.play()
+    }
+  }, [currentTrack, epId])
 
   // Update volume
   useEffect(() => {
@@ -228,6 +248,7 @@ function App() {
         onNextTrack={nextTrack}
         onPrevTrack={prevTrack}
         onVolumeChange={setVolume}
+        onSeek={seekTo}
       />
 
       {/* Bio page link */}
