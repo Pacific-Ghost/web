@@ -23,8 +23,8 @@ export const EP_THEMES: EPTheme[] = [
     statusType: "coming",
     description: [],
     bgColor: "#0a0515",
-    primary: "#ff006e",
-    secondary: "#00d9ff",
+    primary: "#e8c36a",
+    secondary: "#ffffff",
     textColor: "#f0f0ff",
     fontFamily:
       "'Megrim', 'Futura', 'Trebuchet MS', 'Century Gothic', sans-serif",
@@ -35,10 +35,10 @@ export const EP_THEMES: EPTheme[] = [
       credit: "\u00a9 Cynthia Coulombe B\u00e9gin, 2025. Used with permission",
     },
     tracks: [
-      { id: 1, name: "Love Sick Age", file: "/audio/track1.mp3" },
-      { id: 2, name: "Silver Medalist", file: "/audio/track2.mp3" },
-      { id: 3, name: "Thousand", file: "/audio/track3.mp3" },
-      { id: 4, name: "Graveyard Moon", file: "/audio/track4.mp3" },
+      { id: 1, name: "Love Sick Age", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/love-sick-age.mp3" },
+      { id: 2, name: "Silver Medalist", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/silver-medalist.mp3" },
+      { id: 3, name: "Thousand", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/thousand.mp3" },
+      { id: 4, name: "Graveyard Moon", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/graveyard-moon.mp3" },
     ],
   },
   {
