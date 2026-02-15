@@ -44,6 +44,12 @@ function App() {
     player.loadTrack(0)
   }, [currentTheme.id])
 
+  useEffect(() => {
+    if (player.isPlaying && carousel.autoPlay) {
+      carousel.toggleAutoPlay()
+    }
+  }, [player.isPlaying])
+
   const handleArtworkClick = () => {
     player.loadTrack(0, true)
     if (carousel.autoPlay) {
