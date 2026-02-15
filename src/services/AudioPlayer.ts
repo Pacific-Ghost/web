@@ -29,9 +29,13 @@ export class AudioPlayer {
   }
 
   play(): void {
-    this.audio.play()
-    this.playing = true
-    this.playbackChangeCallback?.(true)
+    this.audio.play().then(() => {
+      this.playing = true
+      this.playbackChangeCallback?.(true)
+    }).catch(() => {
+      this.playing = false
+      this.playbackChangeCallback?.(false)
+    })
   }
 
   pause(): void {
@@ -76,11 +80,13 @@ export class AudioPlayer {
   }
 
   nextTrack(): void {
+    if (this.tracks.length === 0) return
     const next = (this.currentTrackIndex + 1) % this.tracks.length
     this.loadTrack(next, this.playing)
   }
 
   prevTrack(): void {
+    if (this.tracks.length === 0) return
     const prev =
       (this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length
     this.loadTrack(prev, this.playing)

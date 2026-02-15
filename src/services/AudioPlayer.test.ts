@@ -92,12 +92,20 @@ describe('AudioPlayer', () => {
   })
 
   describe('play/pause/toggle', () => {
-    it('play calls audio.play and fires onPlaybackChange', () => {
+    it('play calls audio.play and fires onPlaybackChange on success', async () => {
       const cb = vi.fn()
       player.onPlaybackChange(cb)
       player.play()
+      await vi.waitFor(() => expect(cb).toHaveBeenCalledWith(true))
       expect(mockAudio.play).toHaveBeenCalled()
-      expect(cb).toHaveBeenCalledWith(true)
+    })
+
+    it('play fires onPlaybackChange(false) when autoplay is blocked', async () => {
+      mockAudio.play = vi.fn().mockRejectedValue(new Error('autoplay blocked'))
+      const cb = vi.fn()
+      player.onPlaybackChange(cb)
+      player.play()
+      await vi.waitFor(() => expect(cb).toHaveBeenCalledWith(false))
     })
 
     it('pause calls audio.pause and fires onPlaybackChange', () => {
@@ -108,11 +116,11 @@ describe('AudioPlayer', () => {
       expect(cb).toHaveBeenCalledWith(false)
     })
 
-    it('toggle alternates between play and pause', () => {
+    it('toggle alternates between play and pause', async () => {
       const cb = vi.fn()
       player.onPlaybackChange(cb)
       player.toggle() // should play
-      expect(cb).toHaveBeenCalledWith(true)
+      await vi.waitFor(() => expect(cb).toHaveBeenCalledWith(true))
       player.toggle() // should pause
       expect(cb).toHaveBeenCalledWith(false)
     })
