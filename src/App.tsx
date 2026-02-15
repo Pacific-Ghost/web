@@ -36,12 +36,12 @@ function App() {
   const player = useAudioPlayer()
   const carousel = useCarousel(epIds, currentTheme.id, (nextId) => {
     player.pause()
-    player.loadTrack(0)
     navigate(`/ep/${nextId}`)
   })
 
   useEffect(() => {
     player.setTracks(currentTheme.tracks)
+    player.loadTrack(0)
   }, [currentTheme.id])
 
   const handleArtworkClick = () => {
