@@ -92,23 +92,23 @@ export class AudioPlayer {
     this.loadTrack(prev, this.playing)
   }
 
-  onPlaybackChange(cb: PlaybackChangeCallback): void {
+  onPlaybackChange(cb: PlaybackChangeCallback | null): void {
     this.playbackChangeCallback = cb
   }
 
-  onProgressChange(cb: ProgressChangeCallback): void {
+  onProgressChange(cb: ProgressChangeCallback | null): void {
     this.progressChangeCallback = cb
   }
 
-  onTrackChange(cb: TrackChangeCallback): void {
+  onTrackChange(cb: TrackChangeCallback | null): void {
     this.trackChangeCallback = cb
   }
 
-  onVolumeChange(cb: VolumeChangeCallback): void {
+  onVolumeChange(cb: VolumeChangeCallback | null): void {
     this.volumeChangeCallback = cb
   }
 
-  onTrackEnded(cb: TrackEndedCallback): void {
+  onTrackEnded(cb: TrackEndedCallback | null): void {
     this.trackEndedCallback = cb
   }
 
