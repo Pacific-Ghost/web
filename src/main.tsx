@@ -32,7 +32,7 @@ function AnimatedRoutes() {
         transition={pageTransition}
       >
         <Routes location={location}>
-          <Route path="/" element={<Navigate to="/ep/lovesickage" state={{ fromRoot: true }} replace />} />
+          <Route path="/" element={<Navigate to="/ep/lovesickage" replace />} />
           <Route path="/ep/:id" element={<App />} />
           <Route path="/bio" element={<BioPage />} />
         </Routes>
