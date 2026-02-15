@@ -90,6 +90,22 @@ describe('AudioPlayer', () => {
       expect(mockAudio.play).not.toHaveBeenCalled()
     })
 
+    it('skips reload if same track is already loaded', () => {
+      player.loadTrack(0)
+      const loadSpy = vi.fn()
+      mockAudio.load = loadSpy
+      player.loadTrack(0)
+      expect(loadSpy).not.toHaveBeenCalled()
+    })
+
+    it('still fires trackChange when skipping reload', () => {
+      player.loadTrack(0)
+      const cb = vi.fn()
+      player.onTrackChange(cb)
+      player.loadTrack(0)
+      expect(cb).toHaveBeenCalledWith(0, 'Track 1')
+    })
+
     it('resets progress to 0 on load', () => {
       const cb = vi.fn()
       player.onProgressChange(cb)
