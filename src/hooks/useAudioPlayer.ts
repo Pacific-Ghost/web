@@ -19,11 +19,11 @@ export function useAudioPlayer() {
     audioPlayer.onTrackEnded(() => audioPlayer.nextTrack())
 
     return () => {
-      audioPlayer.onPlaybackChange(null as never)
-      audioPlayer.onProgressChange(null as never)
-      audioPlayer.onTrackChange(null as never)
-      audioPlayer.onVolumeChange(null as never)
-      audioPlayer.onTrackEnded(null as never)
+      audioPlayer.onPlaybackChange(null)
+      audioPlayer.onProgressChange(null)
+      audioPlayer.onTrackChange(null)
+      audioPlayer.onVolumeChange(null)
+      audioPlayer.onTrackEnded(null)
     }
   }, [])
 

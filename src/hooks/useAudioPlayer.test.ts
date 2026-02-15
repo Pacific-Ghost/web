@@ -85,4 +85,20 @@ describe('useAudioPlayer', () => {
     result.current.setVolume(80)
     expect(audioPlayer.setVolume).toHaveBeenCalledWith(80)
   })
+
+  it('deregisters all event listeners on unmount', () => {
+    const { unmount } = renderHook(() => useAudioPlayer())
+    unmount()
+    expect(audioPlayer.onPlaybackChange).toHaveBeenCalledTimes(2)
+    expect(audioPlayer.onProgressChange).toHaveBeenCalledTimes(2)
+    expect(audioPlayer.onTrackChange).toHaveBeenCalledTimes(2)
+    expect(audioPlayer.onVolumeChange).toHaveBeenCalledTimes(2)
+    expect(audioPlayer.onTrackEnded).toHaveBeenCalledTimes(2)
+  })
+
+  it('calls nextTrack when track ends', () => {
+    renderHook(() => useAudioPlayer())
+    act(() => { mock._callbacks.ended() })
+    expect(audioPlayer.nextTrack).toHaveBeenCalled()
+  })
 })
