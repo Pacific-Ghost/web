@@ -73,6 +73,7 @@ export class AudioPlayer {
     if (!track) return
     this.audio.src = track.file
     this.audio.load()
+    this.progressChangeCallback?.(0)
     this.trackChangeCallback?.(index, track.name)
     if (autoPlay) {
       this.play()
