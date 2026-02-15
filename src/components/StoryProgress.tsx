@@ -3,10 +3,10 @@ import { EPTheme } from '../data/eps'
 interface StoryProgressProps {
   eps: EPTheme[]
   currentEP: number
-  storyProgress: number
+  currentItemProgress: number
 }
 
-export function StoryProgress({ eps, currentEP, storyProgress }: StoryProgressProps) {
+export function StoryProgress({ eps, currentEP, currentItemProgress }: StoryProgressProps) {
   return (
     <div className="story-progress">
       {eps.map((ep, index) => (
@@ -14,7 +14,7 @@ export function StoryProgress({ eps, currentEP, storyProgress }: StoryProgressPr
           <div
             className="progress-fill"
             style={{
-              width: index < currentEP ? '100%' : index === currentEP ? `${storyProgress}%` : '0%',
+              width: index < currentEP ? '100%' : index === currentEP ? `${currentItemProgress}%` : '0%',
             }}
           />
         </div>

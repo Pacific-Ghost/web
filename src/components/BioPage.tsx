@@ -1,16 +1,10 @@
-import { useLocation, useNavigate } from 'react-router-dom'
-import { getEPById, EP_THEMES } from '../data/eps'
+import { useLocation } from 'react-router-dom'
+import { useEPTheme } from '../hooks/useEPTheme'
 
 export function BioPage() {
   const location = useLocation()
-  const navigate = useNavigate()
-
   const fromEP = (location.state as { fromEP?: string } | null)?.fromEP
-  const theme = getEPById(fromEP ?? EP_THEMES[0].id)
-
-  const handleBack = () => {
-    navigate(`/ep/${theme.id}`)
-  }
+  const [theme, setTheme] = useEPTheme(fromEP)
 
   return (
     <div className="bio-page" data-theme={theme.id}>
@@ -18,7 +12,7 @@ export function BioPage() {
       <div className="neon-grid" />
       <div className="grain-layer" />
 
-      <button className="bio-back" onClick={handleBack} title="Back">
+      <button className="bio-back" onClick={() => setTheme(theme.id)} title="Back">
         &larr;
       </button>
 

@@ -56,7 +56,7 @@ function App() {
       <StoryProgress
         eps={EP_THEMES}
         currentEP={getEPIndex(currentTheme.id)}
-        storyProgress={carousel.currentItemProgress}
+        currentItemProgress={carousel.currentItemProgress}
       />
 
       <div className="nav-area prev" onClick={carousel.prev} />
