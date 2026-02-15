@@ -68,9 +68,19 @@ export class AudioPlayer {
   }
 
   loadTrack(index: number, autoPlay = false): void {
-    this.currentTrackIndex = index
     const track = this.tracks[index]
     if (!track) return
+
+    const alreadyLoaded = this.audio.src === track.file && this.currentTrackIndex === index
+    if (alreadyLoaded) {
+      this.trackChangeCallback?.(index, track.name)
+      if (autoPlay && !this.playing) {
+        this.play()
+      }
+      return
+    }
+
+    this.currentTrackIndex = index
     this.audio.src = track.file
     this.audio.load()
     this.progressChangeCallback?.(0)
