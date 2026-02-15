@@ -24,7 +24,7 @@ export const EP_THEMES: EPTheme[] = [
     description: [],
     bgColor: "#0a0515",
     primary: "#e8c36a",
-    secondary: "#ffffff",
+    secondary: "#c8963e",
     textColor: "#f0f0ff",
     fontFamily:
       "'Megrim', 'Futura', 'Trebuchet MS', 'Century Gothic', sans-serif",
@@ -59,12 +59,9 @@ export const EP_THEMES: EPTheme[] = [
       alt: "The Hill EP cover — neon-lit studio with guitar, amps, and pedals bathed in pink light",
     },
     tracks: [
-      { id: 1, name: "Golden Daze", file: "/audio/hill1.mp3" },
-      { id: 2, name: "Sunset Drive", file: "/audio/hill2.mp3" },
-      { id: 3, name: "The Hill", file: "/audio/hill3.mp3" },
-      { id: 4, name: "Amber Waves", file: "/audio/hill4.mp3" },
-      { id: 5, name: "Fading Light", file: "/audio/hill5.mp3" },
-      { id: 6, name: "Last Summer", file: "/audio/hill6.mp3" },
+      { id: 1, name: "Out of the City", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/out-of-the-city.mp3" },
+      { id: 2, name: "Machine", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/machine.mp3" },
+      { id: 3, name: "Ambulance", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/ambulance.mp3" },
     ],
   },
 ];
