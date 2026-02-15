@@ -67,18 +67,24 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
             </>
           ) : (
             <>
-              <a href="#" className="link-btn">
-                <span className="link-icon">▶</span>
-                <span>Spotify</span>
-              </a>
-              <a href="#" className="link-btn">
-                <span className="link-icon">♪</span>
-                <span>Apple Music</span>
-              </a>
-              <a href="#" className="link-btn">
-                <span className="link-icon">◆</span>
-                <span>Bandcamp</span>
-              </a>
+              {theme.links?.spotify && (
+                <a href={theme.links.spotify} className="link-btn" target="_blank" rel="noopener noreferrer">
+                  <span className="link-icon">▶</span>
+                  <span>Spotify</span>
+                </a>
+              )}
+              {theme.links?.appleMusic && (
+                <a href={theme.links.appleMusic} className="link-btn" target="_blank" rel="noopener noreferrer">
+                  <span className="link-icon">♪</span>
+                  <span>Apple Music</span>
+                </a>
+              )}
+              {theme.links?.bandcamp && (
+                <a href={theme.links.bandcamp} className="link-btn" target="_blank" rel="noopener noreferrer">
+                  <span className="link-icon">◆</span>
+                  <span>Bandcamp</span>
+                </a>
+              )}
             </>
           )}
         </div>

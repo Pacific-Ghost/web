@@ -12,6 +12,7 @@ export interface EPTheme {
   fontFamily: string;
   artwork?: { webp: string; jpg: string; alt: string; credit?: string };
   tracks: Array<{ id: number; name: string; file: string }>;
+  links?: { spotify?: string; appleMusic?: string; bandcamp?: string };
 }
 
 export const EP_THEMES: EPTheme[] = [
@@ -63,6 +64,11 @@ export const EP_THEMES: EPTheme[] = [
       { id: 2, name: "Machine", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/machine.mp3" },
       { id: 3, name: "Ambulance", file: "http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/ambulance.mp3" },
     ],
+    links: {
+      spotify: "https://open.spotify.com/artist/3grYt3aOy0jbxAbDEvzeNm",
+      appleMusic: "https://music.apple.com/us/artist/pacific-ghost/1719889121",
+      bandcamp: "https://pacificghost8675.bandcamp.com/album/the-hill",
+    },
   },
 ];
 
