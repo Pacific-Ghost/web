@@ -25,6 +25,8 @@ export function useCarousel(
 
   const directionRef = useRef<Direction>('right')
   const prevIdRef = useRef(currentId)
+  const onNavigateRef = useRef(onNavigate)
+  onNavigateRef.current = onNavigate
 
   const [autoPlay, setAutoPlay] = useState(false)
   const [currentItemProgress, setCurrentItemProgress] = useState(0)
@@ -58,13 +60,13 @@ export function useCarousel(
 
   const next = useCallback(() => {
     directionRef.current = 'right'
-    onNavigate(getNextId())
-  }, [onNavigate, getNextId])
+    onNavigateRef.current(getNextId())
+  }, [getNextId])
 
   const prev = useCallback(() => {
     directionRef.current = 'left'
-    onNavigate(getPrevId())
-  }, [onNavigate, getPrevId])
+    onNavigateRef.current(getPrevId())
+  }, [getPrevId])
 
   const toggleAutoPlay = useCallback(() => {
     setAutoPlay((prev) => !prev)
@@ -89,14 +91,14 @@ export function useCarousel(
 
     const timeoutId: ReturnType<typeof setTimeout> = setTimeout(() => {
       const nextIndex = (currentIndex + 1) % itemsArray.length
-      onNavigate(itemsArray[nextIndex])
+      onNavigateRef.current(itemsArray[nextIndex])
     }, slideDuration)
 
     return () => {
       clearInterval(intervalId)
       clearTimeout(timeoutId)
     }
-  }, [autoPlay, currentId, currentIndex, itemsArray, onNavigate, slideDuration])
+  }, [autoPlay, currentId, currentIndex, itemsArray, slideDuration])
 
   return {
     currentItemProgress,
