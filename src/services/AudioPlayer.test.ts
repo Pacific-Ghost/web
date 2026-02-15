@@ -89,6 +89,13 @@ describe('AudioPlayer', () => {
       player.loadTrack(0)
       expect(mockAudio.play).not.toHaveBeenCalled()
     })
+
+    it('resets progress to 0 on load', () => {
+      const cb = vi.fn()
+      player.onProgressChange(cb)
+      player.loadTrack(1)
+      expect(cb).toHaveBeenCalledWith(0)
+    })
   })
 
   describe('play/pause/toggle', () => {
