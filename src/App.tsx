@@ -1,65 +1,65 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
-import './App.css'
-import { EP_THEMES, getEPIndex } from './data/eps'
-import { StoryProgress } from './components/StoryProgress'
-import { PlayerBar } from './components/PlayerBar'
-import { EPPage } from './components/EPPage'
-import { useAudioPlayer } from './hooks/useAudioPlayer'
-import { useCarousel } from './hooks/useCarousel'
-import { useEPTheme } from './hooks/useEPTheme'
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import "./App.css";
+import { EP_THEMES, getEPIndex } from "./data/eps";
+import { StoryProgress } from "./components/StoryProgress";
+import { PlayerBar } from "./components/PlayerBar";
+import { EPPage } from "./components/EPPage";
+import { useAudioPlayer } from "./hooks/useAudioPlayer";
+import { useCarousel } from "./hooks/useCarousel";
+import { useEPTheme } from "./hooks/useEPTheme";
 
 const slideVariants = {
   enter: (direction: string) => ({
-    x: direction === 'right' ? '100%' : '-100%',
+    x: direction === "right" ? "100%" : "-100%",
   }),
   center: {
     x: 0,
   },
   exit: (direction: string) => ({
-    x: direction === 'right' ? '-100%' : '100%',
+    x: direction === "right" ? "-100%" : "100%",
   }),
-}
+};
 
 const slideTransition = {
-  type: 'tween',
+  type: "tween",
   duration: 0.35,
-  ease: 'easeInOut',
-} as const
+  ease: "easeInOut",
+} as const;
 
-const epIds = new Set(EP_THEMES.map(ep => ep.id))
+const epIds = new Set(EP_THEMES.map((ep) => ep.id));
 
 function App() {
-  const navigate = useNavigate()
-  const [currentTheme] = useEPTheme()
-  const player = useAudioPlayer()
+  const navigate = useNavigate();
+  const [currentTheme] = useEPTheme();
+  const player = useAudioPlayer();
   const carousel = useCarousel(epIds, currentTheme.id, (nextId) => {
-    player.pause()
-    navigate(`/ep/${nextId}`)
-  })
+    player.pause();
+    navigate(`/ep/${nextId}`);
+  });
 
   // Sync tracks when EP changes — player/tracks are derived from currentTheme.id
   useEffect(() => {
-    player.setTracks(currentTheme.tracks)
-    player.loadTrack(0)
+    player.setTracks(currentTheme.tracks);
+    player.loadTrack(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTheme.id])
+  }, [currentTheme.id]);
 
   // Disable auto-advance when audio starts playing
   useEffect(() => {
     if (player.isPlaying && carousel.autoPlay) {
-      carousel.toggleAutoPlay()
+      carousel.toggleAutoPlay();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player.isPlaying])
+  }, [player.isPlaying]);
 
   const handleArtworkClick = () => {
-    player.loadTrack(0, true)
+    player.loadTrack(0, true);
     if (carousel.autoPlay) {
-      carousel.toggleAutoPlay()
+      carousel.toggleAutoPlay();
     }
-  }
+  };
 
   return (
     <div className="app" data-theme={currentTheme.id}>
@@ -77,7 +77,11 @@ function App() {
       <div className="grain-layer" />
 
       <div className="slide-container">
-        <AnimatePresence initial={false} mode="popLayout" custom={carousel.direction}>
+        <AnimatePresence
+          initial={false}
+          mode="popLayout"
+          custom={carousel.direction}
+        >
           <motion.div
             key={currentTheme.id}
             data-theme={currentTheme.id}
@@ -108,22 +112,27 @@ function App() {
 
       <button
         className="bio-button"
-        onClick={() => navigate('/bio', { state: { fromEP: currentTheme.id } })}
+        onClick={() => navigate("/bio", { state: { fromEP: currentTheme.id } })}
         title="About Pacific Ghost"
       >
         &#9432;
       </button>
 
       <button
-        className={`auto-play-toggle ${!carousel.autoPlay ? 'paused' : ''}`}
+        disabled={player.isPlaying}
+        className={`auto-play-toggle ${!carousel.autoPlay ? "paused" : ""}`}
         onClick={carousel.toggleAutoPlay}
-        title={carousel.autoPlay ? 'Auto-advance enabled' : 'Auto-advance paused'}
+        title={
+          carousel.autoPlay ? "Auto-advance enabled" : "Auto-advance paused"
+        }
       >
-        <span className="toggle-icon">{carousel.autoPlay ? '⏸' : '▶'}</span>
-        <span className="toggle-label">{carousel.autoPlay ? 'Auto' : 'Paused'}</span>
+        <span className="toggle-icon">{carousel.autoPlay ? "⏸" : "▶"}</span>
+        <span className="toggle-label">
+          {carousel.autoPlay ? "Auto" : "Paused"}
+        </span>
       </button>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
