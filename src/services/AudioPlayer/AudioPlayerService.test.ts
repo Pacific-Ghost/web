@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { HTMLAudioPlayer } from "./AudioPlayerService";
+import { HTMLAudioPlayerService } from "./AudioPlayerService";
 
 // Mock HTMLAudioElement
 function createMockAudio() {
@@ -29,12 +29,12 @@ function createMockAudio() {
 }
 
 describe("AudioPlayer", () => {
-  let player: HTMLAudioPlayer;
+  let player: HTMLAudioPlayerService;
   let mockAudio: ReturnType<typeof createMockAudio>;
 
   beforeEach(() => {
     mockAudio = createMockAudio();
-    player = new HTMLAudioPlayer(() => mockAudio);
+    player = new HTMLAudioPlayerService(() => mockAudio);
   });
 
   describe("constructor", () => {
@@ -44,7 +44,7 @@ describe("AudioPlayer", () => {
 
     it("accepts custom initial volume", () => {
       const audio = createMockAudio();
-      new HTMLAudioPlayer(() => audio, 50);
+      new HTMLAudioPlayerService(() => audio, 50);
       expect(audio.volume).toBe(0.5);
     });
   });
