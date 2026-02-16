@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import "./index.css"
 import App from "./App.tsx";
 import { BioPage } from "./components/BioPage.tsx";
+import { ServicesProvider } from "./services/ServicesProvider";
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -45,7 +46,9 @@ function AnimatedRoutes() {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AnimatedRoutes />
+      <ServicesProvider>
+        <AnimatedRoutes />
+      </ServicesProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );
