@@ -94,6 +94,7 @@ function App() {
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.15}
+            style={{ touchAction: 'pan-y' }}
             onDragEnd={(_e, info) => {
               if (info.offset.x < -60) carousel.next()
               else if (info.offset.x > 60) carousel.prev()
