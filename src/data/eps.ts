@@ -39,22 +39,22 @@ export const EP_THEMES: EPTheme[] = [
       {
         id: 1,
         name: 'Love Sick Age',
-        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/love-sick-age.mp3',
+        file: 'https://s3.us-west-1.amazonaws.com/media.pacificghost.fm/audio/love-sick-age.mp3',
       },
       {
         id: 2,
         name: 'Silver Medalist',
-        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/silver-medalist.mp3',
+        file: 'https://s3.us-west-1.amazonaws.com/media.pacificghost.fm/audio/silver-medalist.mp3',
       },
       {
         id: 3,
         name: 'Thousand',
-        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/thousand.mp3',
+        file: 'https://s3.us-west-1.amazonaws.com/media.pacificghost.fm/audio/thousand.mp3',
       },
       {
         id: 4,
         name: 'Graveyard Moon',
-        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/graveyard-moon.mp3',
+        file: 'https://s3.us-west-1.amazonaws.com/media.pacificghost.fm/audio/graveyard-moon.mp3',
       },
     ],
   },
@@ -79,17 +79,17 @@ export const EP_THEMES: EPTheme[] = [
       {
         id: 1,
         name: 'Out of the City',
-        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/out-of-the-city.mp3',
+        file: 'https://s3.us-west-1.amazonaws.com/media.pacificghost.fm/audio/out-of-the-city.mp3',
       },
       {
         id: 2,
         name: 'Machine',
-        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/machine.mp3',
+        file: 'https://s3.us-west-1.amazonaws.com/media.pacificghost.fm/audio/machine.mp3',
       },
       {
         id: 3,
         name: 'Ambulance',
-        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/ambulance.mp3',
+        file: 'https://s3.us-west-1.amazonaws.com/media.pacificghost.fm/audio/ambulance.mp3',
       },
     ],
     links: {
