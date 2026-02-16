@@ -177,6 +177,14 @@ describe('AudioPlayer', () => {
     })
   })
 
+  describe('getVolume', () => {
+    it('returns current volume as 0-100 integer', () => {
+      expect(ctx.player.getVolume()).toBe(100)
+      ctx.player.setVolume(30)
+      expect(ctx.player.getVolume()).toBe(30)
+    })
+  })
+
   describe('setVolume', () => {
     it('sets audio volume and fires onVolumeChange', () => {
       const cb = vi.fn()

@@ -23,6 +23,7 @@ Node.js 22+ (managed via Volta)
 
 ### Linting and Formatting
 - `npm run lint`
+- `npm run format` — auto-format with Prettier (single quotes, no semicolons)
 - `npx tsc --noEmit` — type check
 
 ### Tests
@@ -38,6 +39,7 @@ Single-page React app built with Vite and react-router-dom. Routes: `/ep/:id` (c
 ### Key Directories
 - `src/data/` — EP theme configuration (track lists, colors, fonts)
 - `src/services/` — Plain TypeScript modules. No React imports. No `utils/` folder — everything goes here or in hooks.
+  - Exception: `ServicesProvider.tsx` bridges the service and hook layers via React Context
   - Convention: `services/Name/NameService.ts` + `NameService.test.ts` — file exports the interface as the clean name
 - `src/hooks/` — React hooks bridging services to state (useAudioPlayer, useCarousel, useEPTheme)
 - `src/components/` — UI components (EPPage, BioPage, HeartbeatTitle, StoryProgress, PlayerBar)
@@ -72,7 +74,7 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 - `AWS_SECRET_ACCESS_KEY`
 - `PG_WEBSITE_CF_DISTRO_ID` — CloudFront distribution ID
 
-## Common Development Tasks
+## Conventions
 
 ### Architecture Conventions
 - Services are always classes implementing exported interfaces — consumers depend on interfaces, not concrete classes
@@ -81,12 +83,13 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 - Services use typed event callbacks (e.g., `onPlaybackChange(cb)`) not React patterns
 - Service callbacks accept `null` for deregistration
 - Hooks bridge services to React via `useState` + `useEffect`
+- Single source of truth — every piece of state should have exactly one owner. Derive, don't duplicate.
 - Components are pure presentation — receive data and callbacks as props
 - Callbacks passed into hooks should be stored in refs to avoid effect dependency churn
 - Hooks returning two values use array tuples `[value, setter]` (not objects)
 - ESLint config is `.eslintrc.cjs` — uses `--max-warnings 0` so any warning fails the build
 - Prefer `satisfies` over `as` for type assertions — avoid `any` in type definitions
-
+- `prefer-const` is enforced — tests use `const ctx = {} as { ... }` pattern instead of `let` with `beforeEach` reassignment
 - Use `ReturnType<typeof setTimeout>` for timer refs — `@types/node` is not installed, so `NodeJS.Timeout` won't compile
 - EP themes are in `src/data/eps.ts` — add new EPs there (the carousel auto-discovers them)
 - CSS theming uses `[data-theme="epid"]` selectors in App.css
@@ -98,11 +101,11 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 - Services are injected via `ServicesContext` (defined in `src/services/ServicesProvider.tsx`)
 - `ServicesProvider` wraps the app in `main.tsx` — provides the real singleton instances
 - Hooks access services via `useServices()` instead of importing singletons directly
-- The container holds interfaces, not concrete classes. Only services with instance state go in the container. Static-only services stay as direct imports.
+- Only services with instance state go in the container. Static-only services stay as direct imports.
 
 ### Test Utilities (`src/test-utils.tsx`)
 - `mockAudioPlayer(overrides?)` — returns a mock conforming to the service interface with all methods as `vi.fn()`
-- `renderWithProviders(ui, options?)` — wraps `render` with `MockServicesProvider` + `MemoryRouter`
+- `renderWithProviders(ui, options?)` — wraps `render` with `ServicesContext.Provider` + `MemoryRouter`
 - `renderHookWithProviders(hook, options?)` — wraps `renderHook` with same providers
 - Pass `{ services: { audioPlayer: myMock } }` in options to inject mocks — no `vi.mock()` needed
 - Hook tests use `createTrackedMock()` pattern to capture service callbacks for simulation
