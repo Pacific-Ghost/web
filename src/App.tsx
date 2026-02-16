@@ -91,6 +91,13 @@ function App() {
             animate="center"
             exit="exit"
             transition={slideTransition}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.15}
+            onDragEnd={(_e, info) => {
+              if (info.offset.x < -60) carousel.next()
+              else if (info.offset.x > 60) carousel.prev()
+            }}
           >
             <EPPage theme={currentTheme} onArtworkClick={handleArtworkClick} />
           </motion.div>
@@ -108,6 +115,10 @@ function App() {
         onPrevTrack={player.prevTrack}
         onVolumeChange={player.setVolume}
         onSeek={player.seek}
+        onBioClick={() => navigate('/bio', { state: { fromEP: currentTheme.id } })}
+        autoPlay={carousel.autoPlay}
+        onToggleAutoPlay={carousel.toggleAutoPlay}
+        autoPlayDisabled={player.isPlaying}
       />
 
       <button
