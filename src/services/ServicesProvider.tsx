@@ -1,27 +1,23 @@
-import { createContext, useContext } from "react";
-import {
-  type AudioPlayer,
-  audioPlayer,
-} from "./AudioPlayer/AudioPlayerService";
+import { createContext, useContext } from 'react'
+import { type AudioPlayer, audioPlayer } from './AudioPlayer/AudioPlayerService'
 
 export type ServicesContainer = {
-  audioPlayer: AudioPlayer;
-};
+  audioPlayer: AudioPlayer
+}
 
-const defaultServices: ServicesContainer = { audioPlayer: audioPlayer };
+const defaultServices: ServicesContainer = { audioPlayer: audioPlayer }
 
-export const ServicesContext =
-  createContext<ServicesContainer>(defaultServices);
+export const ServicesContext = createContext<ServicesContainer>(defaultServices)
 
 export function ServicesProvider({ children }: { children: React.ReactNode }) {
   return (
     <ServicesContext.Provider value={defaultServices}>
       {children}
     </ServicesContext.Provider>
-  );
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useServices(): ServicesContainer {
-  return useContext(ServicesContext);
+  return useContext(ServicesContext)
 }

@@ -9,7 +9,11 @@ interface EPPageProps {
 export function EPPage({ theme, onArtworkClick }: EPPageProps) {
   return (
     <div className="site-content">
-      <div className="artwork-container" onClick={onArtworkClick} style={{ cursor: 'pointer' }}>
+      <div
+        className="artwork-container"
+        onClick={onArtworkClick}
+        style={{ cursor: 'pointer' }}
+      >
         <div className="artwork-glow-outer" />
         <div className="artwork-frame">
           {theme.artwork ? (
@@ -19,7 +23,11 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
                 className="artwork-img"
                 src={theme.artwork.jpg}
                 alt={theme.artwork.alt}
-                title={theme.artwork.credit ? `Artwork ${theme.artwork.credit}` : undefined}
+                title={
+                  theme.artwork.credit
+                    ? `Artwork ${theme.artwork.credit}`
+                    : undefined
+                }
                 width={800}
                 height={800}
                 loading="eager"
@@ -68,19 +76,34 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
           ) : (
             <>
               {theme.links?.spotify && (
-                <a href={theme.links.spotify} className="link-btn" target="_blank" rel="noopener noreferrer">
+                <a
+                  href={theme.links.spotify}
+                  className="link-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <span className="link-icon">▶</span>
                   <span>Spotify</span>
                 </a>
               )}
               {theme.links?.appleMusic && (
-                <a href={theme.links.appleMusic} className="link-btn" target="_blank" rel="noopener noreferrer">
+                <a
+                  href={theme.links.appleMusic}
+                  className="link-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <span className="link-icon">♪</span>
                   <span>Apple Music</span>
                 </a>
               )}
               {theme.links?.bandcamp && (
-                <a href={theme.links.bandcamp} className="link-btn" target="_blank" rel="noopener noreferrer">
+                <a
+                  href={theme.links.bandcamp}
+                  className="link-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <span className="link-icon">◆</span>
                   <span>Bandcamp</span>
                 </a>
