@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { AudioPlayer } from './AudioPlayer'
+import { AudioPlayer } from './AudioPlayerService'
 
 // Mock HTMLAudioElement
 function createMockAudio() {

@@ -1,7 +1,7 @@
-import { generateEKGPath, PULSE_SPEED } from '../utils/ekg'
+import { EKGService } from '../services/EKG/EKGService'
 
 export function HeartbeatTitle({ text }: { text: string }) {
-  const ekgPath = generateEKGPath(0, 1000, 100, 3, 60)
+  const ekgPath = EKGService.generatePath(0, 1000, 100, 3, 60)
 
   return (
     <div className="heartbeat-title">
@@ -14,12 +14,12 @@ export function HeartbeatTitle({ text }: { text: string }) {
             className="monitor-pulse-line"
             style={{
               strokeDasharray: '150 2500',
-              animation: `monitorPulse ${PULSE_SPEED}s linear infinite`,
+              animation: `monitorPulse ${EKGService.PULSE_SPEED}s linear infinite`,
             }}
           />
           <circle r="4" className="monitor-dot">
             <animateMotion
-              dur={`${PULSE_SPEED}s`}
+              dur={`${EKGService.PULSE_SPEED}s`}
               repeatCount="indefinite"
               path={ekgPath}
             />

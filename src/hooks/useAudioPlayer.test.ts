@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useAudioPlayer } from './useAudioPlayer'
-import { audioPlayer } from '../services/AudioPlayer'
+import { audioPlayer } from '../services/AudioPlayer/AudioPlayerService'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCallback = (...args: any[]) => void
 
-vi.mock('../services/AudioPlayer', () => {
+vi.mock('../services/AudioPlayer/AudioPlayerService', () => {
   const callbacks: Record<string, AnyCallback> = {}
   return {
     audioPlayer: {

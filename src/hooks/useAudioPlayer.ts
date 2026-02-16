@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { audioPlayer, Track } from '../services/AudioPlayer'
+import { audioPlayer, Track } from '../services/AudioPlayer/AudioPlayerService'
 
 export function useAudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
