@@ -65,7 +65,7 @@ describe('useAudioPlayer', () => {
     const { result } = renderHookWithPlayer()
     expect(result.current.isPlaying).toBe(false)
     expect(result.current.progress).toBe(0)
-    expect(result.current.volume).toBe(70)
+    expect(result.current.volume).toBe(100)
     expect(result.current.currentTrack).toBe(0)
     expect(result.current.trackName).toBe('')
   })

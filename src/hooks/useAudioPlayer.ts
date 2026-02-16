@@ -6,7 +6,7 @@ export function useAudioPlayer() {
   const { audioPlayer } = useServices()
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [volume, setVolume] = useState(70)
+  const [volume, setVolume] = useState(() => audioPlayer.getVolume())
   const [currentTrack, setCurrentTrack] = useState(0)
   const [trackName, setTrackName] = useState('')
 

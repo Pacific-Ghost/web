@@ -20,6 +20,7 @@ export function mockAudioPlayer(
     pause: vi.fn(),
     toggle: vi.fn(),
     seek: vi.fn(),
+    getVolume: vi.fn(() => 100),
     setVolume: vi.fn(),
     setTracks: vi.fn(),
     loadTrack: vi.fn(),
