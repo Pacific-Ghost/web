@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import './App.css'
@@ -54,6 +54,20 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player.isPlaying])
 
+  const touchStartX = useRef<number | null>(null)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const delta = e.changedTouches[0].clientX - touchStartX.current
+    touchStartX.current = null
+    if (delta < -60) carousel.next()
+    else if (delta > 60) carousel.prev()
+  }
+
   const handleArtworkClick = () => {
     player.loadTrack(0, true)
     if (carousel.autoPlay) {
@@ -76,7 +90,11 @@ function App() {
       <div className="neon-grid" />
       <div className="grain-layer" />
 
-      <div className="slide-container">
+      <div
+        className="slide-container"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <AnimatePresence
           initial={false}
           mode="popLayout"
@@ -91,14 +109,6 @@ function App() {
             animate="center"
             exit="exit"
             transition={slideTransition}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.15}
-            style={{ touchAction: 'pan-y' }}
-            onDragEnd={(_e, info) => {
-              if (info.offset.x < -60) carousel.next()
-              else if (info.offset.x > 60) carousel.prev()
-            }}
           >
             <EPPage theme={currentTheme} onArtworkClick={handleArtworkClick} />
           </motion.div>

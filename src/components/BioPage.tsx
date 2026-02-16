@@ -12,16 +12,17 @@ export function BioPage() {
       <div className="neon-grid" />
       <div className="grain-layer" />
 
-      <button
-        className="bio-back"
-        onClick={() => setTheme(theme.id)}
-        title="Back"
-      >
-        &larr;
-      </button>
-
       <div className="bio-content">
-        <h1 className="bio-heading">PACIFIC GHOST</h1>
+        <nav className="bio-nav">
+          <button
+            className="bio-back"
+            onClick={() => setTheme(theme.id)}
+            title="Back"
+          >
+            &larr;
+          </button>
+          <h1 className="bio-heading">PACIFIC GHOST</h1>
+        </nav>
         <p className="bio-text">
           Pacific Ghost is a Los Angeles-based band formed by Jeff Skelton, Dave
           Lentz, Jason Cottis, and Matt Eldredge. The band shares songwriting

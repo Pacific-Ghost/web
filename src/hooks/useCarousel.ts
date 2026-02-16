@@ -33,18 +33,7 @@ export function useCarousel(
 
   const currentIndex = itemsArray.indexOf(currentId)
 
-  // Track direction when currentId changes
   if (currentId !== prevIdRef.current) {
-    const oldIndex = itemsArray.indexOf(prevIdRef.current)
-    const newIndex = itemsArray.indexOf(currentId)
-    const len = itemsArray.length
-
-    if (len > 1) {
-      const forwardDist = (newIndex - oldIndex + len) % len
-      const backwardDist = (oldIndex - newIndex + len) % len
-      directionRef.current = forwardDist <= backwardDist ? 'right' : 'left'
-    }
-
     prevIdRef.current = currentId
   }
 
@@ -60,11 +49,13 @@ export function useCarousel(
 
   const next = useCallback(() => {
     directionRef.current = 'right'
+    setCurrentItemProgress(100)
     onNavigateRef.current(getNextId())
   }, [getNextId])
 
   const prev = useCallback(() => {
     directionRef.current = 'left'
+    setCurrentItemProgress(100)
     onNavigateRef.current(getPrevId())
   }, [getPrevId])
 
@@ -72,15 +63,11 @@ export function useCarousel(
     setAutoPlay((prev) => !prev)
   }, [])
 
-  // Reset progress when currentId changes or autoPlay is disabled
-  useEffect(() => {
-    setCurrentItemProgress(0)
-  }, [currentId, autoPlay])
-
   // Auto-advance timer and progress
   useEffect(() => {
     if (!autoPlay) return
 
+    setCurrentItemProgress(0)
     const startTime = Date.now()
 
     const intervalId: ReturnType<typeof setInterval> = setInterval(() => {
