@@ -39,22 +39,22 @@ export const EP_THEMES: EPTheme[] = [
       {
         id: 1,
         name: 'Love Sick Age',
-        file: 'http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/love-sick-age.mp3',
+        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/love-sick-age.mp3',
       },
       {
         id: 2,
         name: 'Silver Medalist',
-        file: 'http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/silver-medalist.mp3',
+        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/silver-medalist.mp3',
       },
       {
         id: 3,
         name: 'Thousand',
-        file: 'http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/thousand.mp3',
+        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/thousand.mp3',
       },
       {
         id: 4,
         name: 'Graveyard Moon',
-        file: 'http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/graveyard-moon.mp3',
+        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/graveyard-moon.mp3',
       },
     ],
   },
@@ -79,17 +79,17 @@ export const EP_THEMES: EPTheme[] = [
       {
         id: 1,
         name: 'Out of the City',
-        file: 'http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/out-of-the-city.mp3',
+        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/out-of-the-city.mp3',
       },
       {
         id: 2,
         name: 'Machine',
-        file: 'http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/machine.mp3',
+        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/machine.mp3',
       },
       {
         id: 3,
         name: 'Ambulance',
-        file: 'http://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/ambulance.mp3',
+        file: 'https://media.pacificghost.fm.s3-website-us-west-1.amazonaws.com/audio/ambulance.mp3',
       },
     ],
     links: {
