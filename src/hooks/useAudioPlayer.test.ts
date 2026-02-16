@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { act } from "@testing-library/react";
 import { useAudioPlayer } from "./useAudioPlayer";
 import { mockAudioPlayer, renderHookWithProviders } from "../test-utils";
-import type { IAudioPlayer } from "../services/AudioPlayer/AudioPlayerService";
+import type { AudioPlayer } from "../services/AudioPlayer/AudioPlayerService";
 
 type TrackedCallbacks = {
   playback: (isPlaying: boolean) => void;
@@ -30,12 +30,12 @@ function createTrackedMock() {
     onTrackEnded: vi.fn((cb: (() => void) | null) => {
       if (cb) callbacks.ended = cb;
     }),
-  } satisfies Partial<IAudioPlayer>);
+  } satisfies Partial<AudioPlayer>);
   return { player, callbacks };
 }
 
 describe("useAudioPlayer", () => {
-  let player: IAudioPlayer;
+  let player: AudioPlayer;
   let callbacks: TrackedCallbacks;
 
   beforeEach(() => {

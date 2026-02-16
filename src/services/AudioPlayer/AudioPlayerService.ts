@@ -23,7 +23,7 @@ export interface AudioPlayer {
   onTrackEnded(cb: TrackEndedCallback | null): void;
 }
 
-export class HTMLAudioPlayer implements AudioPlayer {
+export class HTMLAudioPlayerService implements AudioPlayer {
   private audio: HTMLAudioElement;
   private tracks: Track[] = [];
   private currentTrackIndex = 0;
@@ -37,7 +37,7 @@ export class HTMLAudioPlayer implements AudioPlayer {
 
   constructor(
     createAudio: () => HTMLAudioElement = () => new Audio(),
-    initialVolume = 70,
+    initialVolume = 100,
   ) {
     this.audio = createAudio();
     this.audio.volume = initialVolume / 100;
@@ -156,4 +156,4 @@ export class HTMLAudioPlayer implements AudioPlayer {
   };
 }
 
-export const audioPlayer: AudioPlayer = new HTMLAudioPlayer();
+export const audioPlayer: AudioPlayer = new HTMLAudioPlayerService();
