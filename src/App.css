@@ -879,8 +879,9 @@
   }
 
   .site-content {
-    padding: 32px 0 80px 0;
+    padding: 32px 0 70px 0;
     min-height: 100dvh;
+    justify-content: flex-start;
   }
 
   .artwork-container {
