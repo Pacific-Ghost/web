@@ -62,18 +62,7 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
           ))}
         </p>
         <div className="links">
-          {theme.statusType === 'coming' ? (
-            <>
-              <a href="#" className="link-btn">
-                <span className="link-icon">◈</span>
-                <span>Pre-Save</span>
-              </a>
-              <a href="#" className="link-btn">
-                <span className="link-icon">♪</span>
-                <span>Follow</span>
-              </a>
-            </>
-          ) : (
+          {theme.statusType === 'coming' ? null : (
             <>
               {theme.links?.spotify && (
                 <a

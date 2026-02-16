@@ -37,12 +37,13 @@ describe('EPPage', () => {
     expect(handleClick).toHaveBeenCalledOnce()
   })
 
-  it('shows Pre-Save and Follow buttons for coming statusType', () => {
-    const { getByText } = render(
+  // TODO: re-enable when pre-save/follow links are wired up
+  it('hides link buttons for coming statusType', () => {
+    const { queryByText } = render(
       <EPPage theme={lovesickage} onArtworkClick={() => {}} />,
     )
-    expect(getByText('Pre-Save')).not.toBeNull()
-    expect(getByText('Follow')).not.toBeNull()
+    expect(queryByText('Pre-Save')).toBeNull()
+    expect(queryByText('Follow')).toBeNull()
   })
 
   it('shows Spotify, Apple Music, Bandcamp buttons for available statusType', () => {
