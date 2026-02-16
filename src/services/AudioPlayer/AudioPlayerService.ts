@@ -11,6 +11,8 @@ export interface AudioPlayer {
   pause(): void
   toggle(): void
   seek(percent: number): void
+  getPlaying(): boolean
+  getCurrentTrack(): { index: number; name: string }
   getVolume(): number
   setVolume(volume: number): void
   setTracks(tracks: Track[]): void
@@ -74,6 +76,15 @@ export class HTMLAudioPlayerService implements AudioPlayer {
     if (this.audio.duration) {
       this.audio.currentTime = (percent / 100) * this.audio.duration
     }
+  }
+
+  getPlaying(): boolean {
+    return this.playing
+  }
+
+  getCurrentTrack(): { index: number; name: string } {
+    const track = this.tracks[this.currentTrackIndex]
+    return { index: this.currentTrackIndex, name: track?.name ?? '' }
   }
 
   getVolume(): number {

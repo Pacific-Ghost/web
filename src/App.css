@@ -153,6 +153,7 @@
   overflow: hidden;
   min-height: 100vh;
   min-height: 100dvh;
+  touch-action: pan-y;
 }
 
 /* Main Content */
