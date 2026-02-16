@@ -75,7 +75,7 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 ## Common Development Tasks
 
 ### Architecture Conventions
-- Services are always classes — no loose functions or `utils/` folders
+- Services are always classes implementing exported interfaces — consumers depend on interfaces, not concrete classes
 - Use static methods when no internal state is needed (e.g., `EKGService.generatePath`)
 - Services use typed event callbacks (e.g., `onPlaybackChange(cb)`) not React patterns
 - Service callbacks accept `null` for deregistration
@@ -84,6 +84,7 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 - Callbacks passed into hooks should be stored in refs to avoid effect dependency churn
 - Hooks returning two values use array tuples `[value, setter]` (not objects)
 - ESLint config is `.eslintrc.cjs` — uses `--max-warnings 0` so any warning fails the build
+- Prefer `satisfies` over `as` for type assertions — avoid `any` in type definitions
 
 - Use `ReturnType<typeof setTimeout>` for timer refs — `@types/node` is not installed, so `NodeJS.Timeout` won't compile
 - EP themes are in `src/data/eps.ts` — add new EPs there (the carousel auto-discovers them)
@@ -91,4 +92,16 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 - EP themes support optional `artwork` (webp/jpg/alt/credit) and `links` (spotify/appleMusic/bandcamp) fields
 - Routes are defined in `src/main.tsx` — default route redirects to `/ep/lovesickage`
 - AudioPlayer tests use a `createMockAudio()` factory with `_fireEvent` helper to simulate HTMLAudioElement events
-- useAudioPlayer tests mock the service module and capture callbacks via `_callbacks` record
+
+### Dependency Injection
+- Services are injected via `ServicesContext` (defined in `src/services/ServicesProvider.tsx`)
+- `ServicesProvider` wraps the app in `main.tsx` — provides the real singleton instances
+- Hooks access services via `useServices()` instead of importing singletons directly
+- The container holds interfaces, not concrete classes. Only services with instance state go in the container. Static-only services stay as direct imports.
+
+### Test Utilities (`src/test-utils.tsx`)
+- `mockAudioPlayer(overrides?)` — returns a mock conforming to the service interface with all methods as `vi.fn()`
+- `renderWithProviders(ui, options?)` — wraps `render` with `MockServicesProvider` + `MemoryRouter`
+- `renderHookWithProviders(hook, options?)` — wraps `renderHook` with same providers
+- Pass `{ services: { audioPlayer: myMock } }` in options to inject mocks — no `vi.mock()` needed
+- Hook tests use `createTrackedMock()` pattern to capture service callbacks for simulation
