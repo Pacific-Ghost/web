@@ -35,12 +35,9 @@ export class HTMLAudioPlayerService implements AudioPlayer {
   private volumeChangeCallback: VolumeChangeCallback | null = null
   private trackEndedCallback: TrackEndedCallback | null = null
 
-  constructor(
-    createAudio: () => HTMLAudioElement = () => new Audio(),
-    initialVolume = 100,
-  ) {
-    this.audio = createAudio()
-    this.audio.volume = initialVolume / 100
+  constructor() {
+    this.audio = new Audio()
+    this.audio.volume = 1
     this.audio.addEventListener('timeupdate', this.handleTimeUpdate)
     this.audio.addEventListener('ended', this.handleEnded)
   }
