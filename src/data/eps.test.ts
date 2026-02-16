@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { EP_THEMES, getEPIndex, getEPById, getNextEPId, getPrevEPId } from './eps'
+import {
+  EP_THEMES,
+  getEPIndex,
+  getEPById,
+  getNextEPId,
+  getPrevEPId,
+} from './eps'
 
 describe('getEPIndex', () => {
   it('returns correct index for first EP', () => {

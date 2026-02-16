@@ -38,7 +38,7 @@ Single-page React app built with Vite and react-router-dom. Routes: `/ep/:id` (c
 ### Key Directories
 - `src/data/` — EP theme configuration (track lists, colors, fonts)
 - `src/services/` — Plain TypeScript modules. No React imports. No `utils/` folder — everything goes here or in hooks.
-  - Convention: `services/NameOfThing/NameOfThingService.ts` + `NameOfThingService.test.ts`
+  - Convention: `services/Name/NameService.ts` + `NameService.test.ts` — file exports the interface as the clean name
 - `src/hooks/` — React hooks bridging services to state (useAudioPlayer, useCarousel, useEPTheme)
 - `src/components/` — UI components (EPPage, BioPage, HeartbeatTitle, StoryProgress, PlayerBar)
 - `src/main.tsx` — Router setup and page-level animated transitions
@@ -76,6 +76,7 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 
 ### Architecture Conventions
 - Services are always classes implementing exported interfaces — consumers depend on interfaces, not concrete classes
+- Naming: interfaces get the clean name (`AudioPlayer`), implementations get a descriptive name (`HTMLAudioPlayerService`) — no `I` prefix on interfaces
 - Use static methods when no internal state is needed (e.g., `EKGService.generatePath`)
 - Services use typed event callbacks (e.g., `onPlaybackChange(cb)`) not React patterns
 - Service callbacks accept `null` for deregistration

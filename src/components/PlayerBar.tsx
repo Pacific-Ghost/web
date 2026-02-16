@@ -48,7 +48,10 @@ export function PlayerBar({
           {String(trackNumber).padStart(2, '0')} — {trackName}
         </div>
         <div className="track-progress" onClick={handleProgressClick}>
-          <div className="track-progress-fill" style={{ width: `${progress}%` }} />
+          <div
+            className="track-progress-fill"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
 

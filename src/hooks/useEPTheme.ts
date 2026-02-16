@@ -1,7 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { EPTheme, getEPById, EP_THEMES } from '../data/eps'
 
-export function useEPTheme(overrideId?: string): [EPTheme, (id: string) => void] {
+export function useEPTheme(
+  overrideId?: string,
+): [EPTheme, (id: string) => void] {
   const { id: routeId } = useParams<{ id: string }>()
   const navigate = useNavigate()
 

@@ -15,8 +15,8 @@ const wrapper = (initialRoute: string) => {
         null,
         React.createElement(Route, { path: '/ep/:id', element: children }),
         React.createElement(Route, { path: '/bio', element: children }),
-        React.createElement(Route, { path: '*', element: children })
-      )
+        React.createElement(Route, { path: '*', element: children }),
+      ),
     )
 }
 
