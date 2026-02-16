@@ -19,6 +19,7 @@ Node.js 22+ (managed via Volta)
 
 ### Development Server
 `npm run dev`
+`npm run preview` — preview production build locally
 
 ### Linting and Formatting
 - `npm run lint`
@@ -32,13 +33,16 @@ Node.js 22+ (managed via Volta)
 ## Architecture
 
 ### High-Level Structure
-Single-page React app built with Vite. The carousel auto-advances between EP slides on a 10-second timer, with per-EP theming (colors, fonts) applied via CSS custom properties and `data-theme` attributes. An audio player bar sits at the bottom.
+Single-page React app built with Vite and react-router-dom. Routes: `/ep/:id` (carousel, default), `/bio` (band bio). Three-layer architecture: services (plain TypeScript) → hooks (React bridge) → components (presentation). The AudioPlayer service singleton owns a programmatic `HTMLAudioElement` via `new Audio()`. Page transitions use framer-motion.
 
 ### Key Directories
 - `src/data/` — EP theme configuration (track lists, colors, fonts)
 - `src/utils/` — Pure utility functions (EKG SVG path generation)
-- `src/components/` — Extracted UI components (HeartbeatTitle, StoryProgress, PlayerBar)
-- `src/App.tsx` — Carousel orchestration and state management
+- `src/services/` — Plain TypeScript singletons (AudioPlayer). No React imports.
+- `src/hooks/` — React hooks bridging services to state (useAudioPlayer, useCarousel, useEPTheme)
+- `src/components/` — UI components (EPPage, BioPage, HeartbeatTitle, StoryProgress, PlayerBar)
+- `src/main.tsx` — Router setup and page-level animated transitions
+- `src/App.tsx` — Thin orchestrator wiring hooks to presentation components
 - `src/App.css` — All styling (single file, not split by component)
 
 ## Technology Stack
@@ -70,6 +74,17 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 
 ## Common Development Tasks
 
+### Architecture Conventions
+- Services are plain TypeScript classes — no React/JSX imports
+- Services use typed event callbacks (e.g., `onPlaybackChange(cb)`) not React patterns
+- Service callbacks accept `null` for deregistration
+- Hooks bridge services to React via `useState` + `useEffect`
+- Components are pure presentation — receive data and callbacks as props
+- Callbacks passed into hooks should be stored in refs to avoid effect dependency churn
+- `npm run lint` is currently broken (missing eslint config) — use `npx tsc --noEmit` for validation
+
 - Use `ReturnType<typeof setTimeout>` for timer refs — `@types/node` is not installed, so `NodeJS.Timeout` won't compile
 - EP themes are in `src/data/eps.ts` — add new EPs there (the carousel auto-discovers them)
 - CSS theming uses `[data-theme="epid"]` selectors in App.css
+- EP themes support optional `artwork` (webp/jpg/alt/credit) and `links` (spotify/appleMusic/bandcamp) fields
+- Routes are defined in `src/main.tsx` — default route redirects to `/ep/lovesickage`

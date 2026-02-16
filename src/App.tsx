@@ -39,15 +39,19 @@ function App() {
     navigate(`/ep/${nextId}`)
   })
 
+  // Sync tracks when EP changes — player/tracks are derived from currentTheme.id
   useEffect(() => {
     player.setTracks(currentTheme.tracks)
     player.loadTrack(0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTheme.id])
 
+  // Disable auto-advance when audio starts playing
   useEffect(() => {
     if (player.isPlaying && carousel.autoPlay) {
       carousel.toggleAutoPlay()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player.isPlaying])
 
   const handleArtworkClick = () => {

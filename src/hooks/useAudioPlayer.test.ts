@@ -3,8 +3,11 @@ import { renderHook, act } from '@testing-library/react'
 import { useAudioPlayer } from './useAudioPlayer'
 import { audioPlayer } from '../services/AudioPlayer'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyCallback = (...args: any[]) => void
+
 vi.mock('../services/AudioPlayer', () => {
-  const callbacks: Record<string, Function> = {}
+  const callbacks: Record<string, AnyCallback> = {}
   return {
     audioPlayer: {
       play: vi.fn(),
@@ -16,17 +19,17 @@ vi.mock('../services/AudioPlayer', () => {
       loadTrack: vi.fn(),
       nextTrack: vi.fn(),
       prevTrack: vi.fn(),
-      onPlaybackChange: vi.fn((cb: Function) => { callbacks.playback = cb }),
-      onProgressChange: vi.fn((cb: Function) => { callbacks.progress = cb }),
-      onTrackChange: vi.fn((cb: Function) => { callbacks.track = cb }),
-      onVolumeChange: vi.fn((cb: Function) => { callbacks.volume = cb }),
-      onTrackEnded: vi.fn((cb: Function) => { callbacks.ended = cb }),
+      onPlaybackChange: vi.fn((cb: AnyCallback) => { callbacks.playback = cb }),
+      onProgressChange: vi.fn((cb: AnyCallback) => { callbacks.progress = cb }),
+      onTrackChange: vi.fn((cb: AnyCallback) => { callbacks.track = cb }),
+      onVolumeChange: vi.fn((cb: AnyCallback) => { callbacks.volume = cb }),
+      onTrackEnded: vi.fn((cb: AnyCallback) => { callbacks.ended = cb }),
       _callbacks: callbacks,
     },
   }
 })
 
-const mock = audioPlayer as unknown as typeof audioPlayer & { _callbacks: Record<string, Function> }
+const mock = audioPlayer as unknown as typeof audioPlayer & { _callbacks: Record<string, AnyCallback> }
 
 describe('useAudioPlayer', () => {
   beforeEach(() => {
