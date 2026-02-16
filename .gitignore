@@ -26,5 +26,8 @@ dist-ssr
 # Claude Code
 .claude
 
-# Plans
-docs/plans
+# Claude Code artifacts
+docs/
+
+# Original artwork (full-res source files)
+public/artwork/originals/
