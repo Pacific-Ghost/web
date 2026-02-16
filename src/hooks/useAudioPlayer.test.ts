@@ -35,28 +35,30 @@ function createTrackedMock() {
 }
 
 describe('useAudioPlayer', () => {
-  let player: AudioPlayer
-  let callbacks: TrackedCallbacks
+  const ctx = {} as {
+    player: AudioPlayer
+    callbacks: TrackedCallbacks
+  }
 
   beforeEach(() => {
     const tracked = createTrackedMock()
-    player = tracked.player
-    callbacks = tracked.callbacks
+    ctx.player = tracked.player
+    ctx.callbacks = tracked.callbacks
   })
 
   function renderHookWithPlayer() {
     return renderHookWithProviders(() => useAudioPlayer(), {
-      services: { audioPlayer: player },
+      services: { audioPlayer: ctx.player },
     })
   }
 
   it('registers all event listeners on mount', () => {
     renderHookWithPlayer()
-    expect(player.onPlaybackChange).toHaveBeenCalled()
-    expect(player.onProgressChange).toHaveBeenCalled()
-    expect(player.onTrackChange).toHaveBeenCalled()
-    expect(player.onVolumeChange).toHaveBeenCalled()
-    expect(player.onTrackEnded).toHaveBeenCalled()
+    expect(ctx.player.onPlaybackChange).toHaveBeenCalled()
+    expect(ctx.player.onProgressChange).toHaveBeenCalled()
+    expect(ctx.player.onTrackChange).toHaveBeenCalled()
+    expect(ctx.player.onVolumeChange).toHaveBeenCalled()
+    expect(ctx.player.onTrackEnded).toHaveBeenCalled()
   })
 
   it('returns initial state', () => {
@@ -71,7 +73,7 @@ describe('useAudioPlayer', () => {
   it('updates isPlaying when onPlaybackChange fires', () => {
     const { result } = renderHookWithPlayer()
     act(() => {
-      callbacks.playback(true)
+      ctx.callbacks.playback(true)
     })
     expect(result.current.isPlaying).toBe(true)
   })
@@ -79,7 +81,7 @@ describe('useAudioPlayer', () => {
   it('updates progress when onProgressChange fires', () => {
     const { result } = renderHookWithPlayer()
     act(() => {
-      callbacks.progress(42.5)
+      ctx.callbacks.progress(42.5)
     })
     expect(result.current.progress).toBe(42.5)
   })
@@ -87,7 +89,7 @@ describe('useAudioPlayer', () => {
   it('updates track info when onTrackChange fires', () => {
     const { result } = renderHookWithPlayer()
     act(() => {
-      callbacks.track(2, 'Ambulance')
+      ctx.callbacks.track(2, 'Ambulance')
     })
     expect(result.current.currentTrack).toBe(2)
     expect(result.current.trackName).toBe('Ambulance')
@@ -96,7 +98,7 @@ describe('useAudioPlayer', () => {
   it('updates volume when onVolumeChange fires', () => {
     const { result } = renderHookWithPlayer()
     act(() => {
-      callbacks.volume(30)
+      ctx.callbacks.volume(30)
     })
     expect(result.current.volume).toBe(30)
   })
@@ -104,28 +106,28 @@ describe('useAudioPlayer', () => {
   it('passes through service methods', () => {
     const { result } = renderHookWithPlayer()
     result.current.toggle()
-    expect(player.toggle).toHaveBeenCalled()
+    expect(ctx.player.toggle).toHaveBeenCalled()
     result.current.seek(50)
-    expect(player.seek).toHaveBeenCalledWith(50)
+    expect(ctx.player.seek).toHaveBeenCalledWith(50)
     result.current.setVolume(80)
-    expect(player.setVolume).toHaveBeenCalledWith(80)
+    expect(ctx.player.setVolume).toHaveBeenCalledWith(80)
   })
 
   it('deregisters all event listeners on unmount', () => {
     const { unmount } = renderHookWithPlayer()
     unmount()
-    expect(player.onPlaybackChange).toHaveBeenCalledTimes(2)
-    expect(player.onProgressChange).toHaveBeenCalledTimes(2)
-    expect(player.onTrackChange).toHaveBeenCalledTimes(2)
-    expect(player.onVolumeChange).toHaveBeenCalledTimes(2)
-    expect(player.onTrackEnded).toHaveBeenCalledTimes(2)
+    expect(ctx.player.onPlaybackChange).toHaveBeenCalledTimes(2)
+    expect(ctx.player.onProgressChange).toHaveBeenCalledTimes(2)
+    expect(ctx.player.onTrackChange).toHaveBeenCalledTimes(2)
+    expect(ctx.player.onVolumeChange).toHaveBeenCalledTimes(2)
+    expect(ctx.player.onTrackEnded).toHaveBeenCalledTimes(2)
   })
 
   it('calls nextTrack when track ends', () => {
     renderHookWithPlayer()
     act(() => {
-      callbacks.ended()
+      ctx.callbacks.ended()
     })
-    expect(player.nextTrack).toHaveBeenCalled()
+    expect(ctx.player.nextTrack).toHaveBeenCalled()
   })
 })
