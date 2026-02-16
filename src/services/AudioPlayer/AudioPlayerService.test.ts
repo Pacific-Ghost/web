@@ -1,7 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { HTMLAudioPlayerService } from './AudioPlayerService'
 
-// Mock HTMLAudioElement
 function createMockAudio() {
   const listeners: Record<string, Array<() => void>> = {}
   return {
@@ -34,18 +33,31 @@ describe('AudioPlayer', () => {
 
   beforeEach(() => {
     mockAudio = createMockAudio()
-    player = new HTMLAudioPlayerService(() => mockAudio)
+    vi.stubGlobal(
+      'Audio',
+      vi.fn(() => mockAudio),
+    )
+    player = new HTMLAudioPlayerService()
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
   })
 
   describe('constructor', () => {
-    it('sets initial volume to 100 by default', () => {
+    it('sets volume to full by default', () => {
       expect(mockAudio.volume).toBe(1)
     })
 
-    it('accepts custom initial volume', () => {
-      const audio = createMockAudio()
-      new HTMLAudioPlayerService(() => audio, 50)
-      expect(audio.volume).toBe(0.5)
+    it('registers timeupdate and ended listeners', () => {
+      expect(mockAudio.addEventListener).toHaveBeenCalledWith(
+        'timeupdate',
+        expect.any(Function),
+      )
+      expect(mockAudio.addEventListener).toHaveBeenCalledWith(
+        'ended',
+        expect.any(Function),
+      )
     })
   })
 

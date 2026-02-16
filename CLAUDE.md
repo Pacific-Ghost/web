@@ -92,7 +92,7 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 - CSS theming uses `[data-theme="epid"]` selectors in App.css
 - EP themes support optional `artwork` (webp/jpg/alt/credit) and `links` (spotify/appleMusic/bandcamp) fields
 - Routes are defined in `src/main.tsx` — default route redirects to `/ep/lovesickage`
-- AudioPlayer tests use a `createMockAudio()` factory with `_fireEvent` helper to simulate HTMLAudioElement events
+- Implementation tests stub globals (`vi.stubGlobal`) rather than accepting factories in constructors — constructors should have no test-only parameters
 
 ### Dependency Injection
 - Services are injected via `ServicesContext` (defined in `src/services/ServicesProvider.tsx`)
