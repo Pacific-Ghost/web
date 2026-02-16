@@ -14,6 +14,7 @@ const pageVariants = {
 
 const pageTransition = { duration: 0.6, ease: "easeInOut" } as const
 
+// eslint-disable-next-line react-refresh/only-export-components
 function AnimatedRoutes() {
   const location = useLocation()
 

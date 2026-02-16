@@ -3,12 +3,12 @@ import { AudioPlayer } from './AudioPlayer'
 
 // Mock HTMLAudioElement
 function createMockAudio() {
-  const listeners: Record<string, Function[]> = {}
+  const listeners: Record<string, Array<() => void>> = {}
   return {
     play: vi.fn().mockResolvedValue(undefined),
     pause: vi.fn(),
     load: vi.fn(),
-    addEventListener: vi.fn((event: string, cb: Function) => {
+    addEventListener: vi.fn((event: string, cb: () => void) => {
       listeners[event] = listeners[event] || []
       listeners[event].push(cb)
     }),
@@ -21,7 +21,7 @@ function createMockAudio() {
     _fireEvent(name: string) {
       (listeners[name] || []).forEach(cb => cb())
     },
-  } as unknown as HTMLAudioElement & { _listeners: Record<string, Function[]>; _fireEvent: (name: string) => void; duration: number }
+  } as unknown as HTMLAudioElement & { _listeners: Record<string, Array<() => void>>; _fireEvent: (name: string) => void; duration: number }
 }
 
 describe('AudioPlayer', () => {
