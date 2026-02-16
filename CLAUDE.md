@@ -37,8 +37,8 @@ Single-page React app built with Vite and react-router-dom. Routes: `/ep/:id` (c
 
 ### Key Directories
 - `src/data/` — EP theme configuration (track lists, colors, fonts)
-- `src/utils/` — Pure utility functions (EKG SVG path generation)
-- `src/services/` — Plain TypeScript singletons (AudioPlayer). No React imports.
+- `src/services/` — Plain TypeScript modules. No React imports. No `utils/` folder — everything goes here or in hooks.
+  - Convention: `services/NameOfThing/NameOfThingService.ts` + `NameOfThingService.test.ts`
 - `src/hooks/` — React hooks bridging services to state (useAudioPlayer, useCarousel, useEPTheme)
 - `src/components/` — UI components (EPPage, BioPage, HeartbeatTitle, StoryProgress, PlayerBar)
 - `src/main.tsx` — Router setup and page-level animated transitions
@@ -75,16 +75,20 @@ The infrastructure is defined in the sibling `/infra` repo using AWS CDK (TypeSc
 ## Common Development Tasks
 
 ### Architecture Conventions
-- Services are plain TypeScript classes — no React/JSX imports
+- Services are always classes — no loose functions or `utils/` folders
+- Use static methods when no internal state is needed (e.g., `EKGService.generatePath`)
 - Services use typed event callbacks (e.g., `onPlaybackChange(cb)`) not React patterns
 - Service callbacks accept `null` for deregistration
 - Hooks bridge services to React via `useState` + `useEffect`
 - Components are pure presentation — receive data and callbacks as props
 - Callbacks passed into hooks should be stored in refs to avoid effect dependency churn
-- `npm run lint` is currently broken (missing eslint config) — use `npx tsc --noEmit` for validation
+- Hooks returning two values use array tuples `[value, setter]` (not objects)
+- ESLint config is `.eslintrc.cjs` — uses `--max-warnings 0` so any warning fails the build
 
 - Use `ReturnType<typeof setTimeout>` for timer refs — `@types/node` is not installed, so `NodeJS.Timeout` won't compile
 - EP themes are in `src/data/eps.ts` — add new EPs there (the carousel auto-discovers them)
 - CSS theming uses `[data-theme="epid"]` selectors in App.css
 - EP themes support optional `artwork` (webp/jpg/alt/credit) and `links` (spotify/appleMusic/bandcamp) fields
 - Routes are defined in `src/main.tsx` — default route redirects to `/ep/lovesickage`
+- AudioPlayer tests use a `createMockAudio()` factory with `_fireEvent` helper to simulate HTMLAudioElement events
+- useAudioPlayer tests mock the service module and capture callbacks via `_callbacks` record
