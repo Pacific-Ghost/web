@@ -126,7 +126,7 @@ function App() {
           carousel.autoPlay ? 'Auto-advance enabled' : 'Auto-advance paused'
         }
       >
-        <span className="toggle-icon">{carousel.autoPlay ? '⏸' : '▶'}</span>
+        <span className="toggle-icon">{carousel.autoPlay ? '‖' : '►'}</span>
         <span className="toggle-label">
           {carousel.autoPlay ? 'Auto' : 'Paused'}
         </span>

@@ -71,7 +71,7 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <span className="link-icon">▶</span>
+                  <span className="link-icon">►</span>
                   <span>Spotify</span>
                 </a>
               )}

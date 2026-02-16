@@ -11,6 +11,41 @@ interface PlayerBarProps {
   onSeek: (percent: number) => void
 }
 
+function PrevIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+      <rect x="0" y="1" width="2.5" height="12" />
+      <polygon points="13,1 13,13 3.5,7" />
+    </svg>
+  )
+}
+
+function PlayIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+      <polygon points="2,0 2,14 13,7" />
+    </svg>
+  )
+}
+
+function PauseIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+      <rect x="1.5" y="1" width="3.5" height="12" />
+      <rect x="9" y="1" width="3.5" height="12" />
+    </svg>
+  )
+}
+
+function NextIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+      <polygon points="1,1 1,13 10.5,7" />
+      <rect x="11.5" y="1" width="2.5" height="12" />
+    </svg>
+  )
+}
+
 export function PlayerBar({
   trackNumber,
   trackName,
@@ -33,13 +68,13 @@ export function PlayerBar({
     <div className="player-bar">
       <div className="player-controls">
         <button className="player-btn" onClick={onPrevTrack}>
-          ⏮
+          <PrevIcon />
         </button>
         <button className="player-btn" onClick={onTogglePlay}>
-          {isPlaying ? '⏸' : '▶'}
+          {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
         <button className="player-btn" onClick={onNextTrack}>
-          ⏭
+          <NextIcon />
         </button>
       </div>
 
@@ -56,7 +91,6 @@ export function PlayerBar({
       </div>
 
       <div className="volume-control">
-        <span className="volume-icon">◈</span>
         <input
           type="range"
           className="volume-slider"

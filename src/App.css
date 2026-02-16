@@ -27,6 +27,7 @@
 .app {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-color);
   color: var(--text-color);
   overflow-x: hidden;
@@ -151,12 +152,14 @@
   z-index: 10;
   overflow: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* Main Content */
 .site-content {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 60px 60px 120px 60px;
   z-index: 10;
   display: flex;
@@ -168,7 +171,7 @@
 /* Artwork Section */
 .artwork-container {
   max-width: 380px;
-  margin: 0 auto 36px auto;
+  margin: 0 auto 28px auto;
   position: relative;
   text-align: center;
   transition: transform 0.3s ease;
@@ -540,6 +543,7 @@
   right: 0;
   border-top: 2px solid var(--primary);
   padding: 20px 40px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   display: flex;
   align-items: center;
   gap: 28px;
@@ -869,80 +873,90 @@
   }
 
   .site-content {
-    padding: 40px 20px 90px 20px;
+    padding: 36px 20px 80px 20px;
+    min-height: 100dvh;
   }
 
   .artwork-container {
-    max-width: 260px;
-    margin-bottom: 24px;
+    max-width: 220px;
+    margin-bottom: 16px;
   }
 
   .artwork-credit {
     white-space: normal;
     font-size: 7px;
+    margin-top: 5px;
   }
 
   .ep-subtitle {
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 4px;
-    margin-bottom: 16px;
+    margin-bottom: 6px;
   }
 
   .ep-title {
-    font-size: 36px;
+    font-size: 32px;
     letter-spacing: 3px;
-    margin-bottom: 14px;
+    margin-bottom: 6px;
   }
 
   [data-theme="thehill"] .ep-title {
-    font-size: 32px;
+    font-size: 28px;
     letter-spacing: 0.03em;
   }
 
   .heartbeat-title .monitor-text {
-    font-size: clamp(28px, 7vw, 48px);
+    font-size: clamp(24px, 7vw, 42px);
     letter-spacing: 0.06em;
   }
 
   .heartbeat-title {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
 
   .ep-status {
-    padding: 6px 16px;
-    font-size: 11px;
-    margin-bottom: 16px;
+    padding: 5px 14px;
+    font-size: 10px;
+    margin-bottom: 8px;
   }
 
   .links {
-    gap: 12px;
+    gap: 8px;
   }
 
   .link-btn {
-    padding: 10px 20px;
-    font-size: 11px;
+    padding: 6px 12px;
+    font-size: 9px;
     letter-spacing: 1px;
+    gap: 6px;
+    border-width: 1.5px;
+    box-shadow: 0 0 6px var(--secondary);
+  }
+
+  .link-icon {
+    font-size: 12px;
   }
 
   .story-progress {
-    padding: 12px 16px;
+    padding: 10px 16px;
     gap: 6px;
   }
 
   .player-bar {
     padding: 10px 14px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
     gap: 10px;
     flex-wrap: nowrap;
   }
 
   .player-controls {
-    gap: 6px;
+    gap: 4px;
   }
 
   .player-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 12px;
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
   }
 
   .volume-control {
@@ -958,18 +972,28 @@
   }
 
   .auto-play-toggle {
-    bottom: 80px;
-    right: 15px;
-    padding: 8px 12px;
-    font-size: 11px;
-    gap: 6px;
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+    padding: 5px 8px;
+    font-size: 9px;
+    gap: 4px;
+    border-width: 1.5px;
   }
 
   .toggle-icon {
-    font-size: 12px;
+    font-size: 10px;
   }
 
   .toggle-label {
-    font-size: 10px;
+    font-size: 8px;
+  }
+
+  .bio-button {
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    left: 12px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    border-width: 1.5px;
   }
 }
