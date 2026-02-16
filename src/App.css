@@ -1,16 +1,17 @@
 /* Base App Styles with Dynamic Theming */
 
 /* Theme: Love Sick Age (Gold + Bronze) */
-[data-theme="lovesickage"] {
+[data-theme='lovesickage'] {
   --bg-color: #0a0515;
   --primary: #e8c36a;
   --secondary: #c8963e;
   --text-color: #f0f0ff;
-  --heading-font: 'Megrim', 'Futura', 'Trebuchet MS', 'Century Gothic', sans-serif;
+  --heading-font: 'Megrim', 'Futura', 'Trebuchet MS', 'Century Gothic',
+    sans-serif;
 }
 
 /* Theme: The Hill (Hot Pink + Yellow) */
-[data-theme="thehill"] {
+[data-theme='thehill'] {
   --bg-color: #1a0a0f;
   --primary: #ff1493;
   --secondary: #ffd700;
@@ -31,7 +32,9 @@
   background: var(--bg-color);
   color: var(--text-color);
   overflow: hidden;
-  transition: background-color 1.5s ease, color 1.5s ease;
+  transition:
+    background-color 1.5s ease,
+    color 1.5s ease;
 }
 
 /* Story Progress */
@@ -93,22 +96,30 @@
   transition: opacity 1.5s ease;
 }
 
-[data-theme="lovesickage"] .neon-glow-bg {
+[data-theme='lovesickage'] .neon-glow-bg {
   background: radial-gradient(
       ellipse at 20% 30%,
       rgba(255, 255, 255, 0.05) 0%,
       transparent 50%
     ),
-    radial-gradient(ellipse at 80% 70%, rgba(200, 150, 62, 0.05) 0%, transparent 50%);
+    radial-gradient(
+      ellipse at 80% 70%,
+      rgba(200, 150, 62, 0.05) 0%,
+      transparent 50%
+    );
 }
 
-[data-theme="thehill"] .neon-glow-bg {
+[data-theme='thehill'] .neon-glow-bg {
   background: radial-gradient(
       ellipse at 30% 40%,
       rgba(255, 20, 147, 0.1) 0%,
       transparent 50%
     ),
-    radial-gradient(ellipse at 70% 60%, rgba(255, 215, 0, 0.12) 0%, transparent 50%);
+    radial-gradient(
+      ellipse at 70% 60%,
+      rgba(255, 215, 0, 0.12) 0%,
+      transparent 50%
+    );
 }
 
 .neon-grid {
@@ -124,13 +135,19 @@
   transition: background-image 1.5s ease;
 }
 
-[data-theme="lovesickage"] .neon-grid {
-  background-image: linear-gradient(rgba(200, 150, 62, 0.1) 1px, transparent 1px),
+[data-theme='lovesickage'] .neon-grid {
+  background-image: linear-gradient(
+      rgba(200, 150, 62, 0.1) 1px,
+      transparent 1px
+    ),
     linear-gradient(90deg, rgba(200, 150, 62, 0.1) 1px, transparent 1px);
 }
 
-[data-theme="thehill"] .neon-grid {
-  background-image: linear-gradient(rgba(255, 20, 147, 0.1) 1px, transparent 1px),
+[data-theme='thehill'] .neon-grid {
+  background-image: linear-gradient(
+      rgba(255, 20, 147, 0.1) 1px,
+      transparent 1px
+    ),
     linear-gradient(90deg, rgba(255, 215, 0, 0.1) 1px, transparent 1px);
 }
 
@@ -171,7 +188,7 @@
 
 /* Artwork Section */
 .artwork-container {
-  max-width: 380px;
+  max-width: 750px;
   margin: 0 auto 28px auto;
   position: relative;
   text-align: center;
@@ -200,16 +217,16 @@
   transition: background 1.5s ease;
 }
 
-[data-theme="lovesickage"] .artwork-glow-outer {
+[data-theme='lovesickage'] .artwork-glow-outer {
   background: radial-gradient(
     circle,
     rgba(232, 195, 106, 0.22) 0%,
-    rgba(200, 150, 62, 0.10) 50%,
+    rgba(200, 150, 62, 0.1) 50%,
     transparent 70%
   );
 }
 
-[data-theme="thehill"] .artwork-glow-outer {
+[data-theme='thehill'] .artwork-glow-outer {
   background: radial-gradient(
     circle,
     rgba(255, 20, 147, 0.25) 0%,
@@ -221,7 +238,7 @@
 .artwork-frame {
   position: relative;
   display: inline-block;
-  max-width: 380px;
+  max-width: 100%;
   border: none;
   background: #000;
   transition: box-shadow 0.3s ease;
@@ -278,7 +295,9 @@
   z-index: 1;
   color: var(--secondary);
   filter: drop-shadow(0 0 20px var(--secondary));
-  transition: color 1.5s ease, filter 1.5s ease;
+  transition:
+    color 1.5s ease,
+    filter 1.5s ease;
 }
 
 .artwork-pattern {
@@ -332,13 +351,17 @@
   text-transform: uppercase;
   letter-spacing: 6px;
   font-family: var(--heading-font);
-  text-shadow: 0 0 25px var(--primary), 0 0 50px var(--primary),
+  text-shadow:
+    0 0 25px var(--primary),
+    0 0 50px var(--primary),
     0 0 75px var(--secondary);
-  transition: text-shadow 1.5s ease, font-family 1.5s ease;
+  transition:
+    text-shadow 1.5s ease,
+    font-family 1.5s ease;
 }
 
 /* The Hill neon sign title */
-[data-theme="thehill"] .ep-title {
+[data-theme='thehill'] .ep-title {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 400;
@@ -356,7 +379,8 @@
 }
 
 @keyframes neonFlicker {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     text-shadow:
       0 0 4px #fff,
@@ -367,11 +391,21 @@
       0 0 90px rgba(255, 215, 0, 0.5),
       0 0 140px rgba(255, 215, 0, 0.25);
   }
-  18% { opacity: 1; }
-  19% { opacity: 0.7; }
-  20% { opacity: 1; }
-  21% { opacity: 0.65; }
-  22% { opacity: 1; }
+  18% {
+    opacity: 1;
+  }
+  19% {
+    opacity: 0.7;
+  }
+  20% {
+    opacity: 1;
+  }
+  21% {
+    opacity: 0.65;
+  }
+  22% {
+    opacity: 1;
+  }
   50% {
     text-shadow:
       0 0 4px #fff,
@@ -382,9 +416,15 @@
       0 0 75px rgba(255, 215, 0, 0.4),
       0 0 110px rgba(255, 215, 0, 0.18);
   }
-  73% { opacity: 1; }
-  74% { opacity: 0.8; }
-  75% { opacity: 1; }
+  73% {
+    opacity: 1;
+  }
+  74% {
+    opacity: 0.8;
+  }
+  75% {
+    opacity: 1;
+  }
 }
 
 /* Heartbeat Monitor Title (Love Sick Age) */
@@ -442,7 +482,8 @@
   stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  filter: drop-shadow(0 0 6px var(--primary)) drop-shadow(0 0 15px var(--primary));
+  filter: drop-shadow(0 0 6px var(--primary))
+    drop-shadow(0 0 15px var(--primary));
 }
 
 .heartbeat-title .monitor-dot {
@@ -451,8 +492,12 @@
 }
 
 @keyframes monitorPulse {
-  0% { stroke-dashoffset: 2650; }
-  100% { stroke-dashoffset: -2650; }
+  0% {
+    stroke-dashoffset: 2650;
+  }
+  100% {
+    stroke-dashoffset: -2650;
+  }
 }
 
 .ep-status {
@@ -465,7 +510,10 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 2px;
-  transition: color 1.5s ease, border-color 1.5s ease, box-shadow 1.5s ease;
+  transition:
+    color 1.5s ease,
+    border-color 1.5s ease,
+    box-shadow 1.5s ease;
 }
 
 .ep-status.coming {
@@ -506,7 +554,10 @@
   color: var(--secondary);
   text-decoration: none;
   font-size: 13px;
-  transition: all 0.3s, color 1.5s ease, border-color 1.5s ease,
+  transition:
+    all 0.3s,
+    color 1.5s ease,
+    border-color 1.5s ease,
     box-shadow 1.5s ease;
   display: inline-flex;
   align-items: center;
@@ -524,7 +575,9 @@
   inset: 0;
   background: var(--secondary);
   opacity: 0;
-  transition: opacity 0.3s, background-color 1.5s ease;
+  transition:
+    opacity 0.3s,
+    background-color 1.5s ease;
   z-index: -1;
 }
 
@@ -551,16 +604,19 @@
   z-index: 1000;
   backdrop-filter: blur(20px);
   color: var(--primary);
-  transition: background-color 1.5s ease, border-color 1.5s ease,
-    box-shadow 1.5s ease, color 1.5s ease;
+  transition:
+    background-color 1.5s ease,
+    border-color 1.5s ease,
+    box-shadow 1.5s ease,
+    color 1.5s ease;
   box-shadow: 0 -2px 10px var(--primary);
 }
 
-[data-theme="lovesickage"] .player-bar {
+[data-theme='lovesickage'] .player-bar {
   background: rgba(10, 5, 21, 0.85);
 }
 
-[data-theme="thehill"] .player-bar {
+[data-theme='thehill'] .player-bar {
   background: rgba(26, 10, 15, 0.85);
 }
 
@@ -624,7 +680,9 @@
 .track-progress-fill {
   height: 100%;
   width: 35%;
-  transition: background 1.5s ease, width 0.1s linear;
+  transition:
+    background 1.5s ease,
+    width 0.1s linear;
   background: linear-gradient(90deg, var(--primary), var(--secondary));
 }
 
@@ -707,7 +765,10 @@
   font-weight: 600;
   z-index: 999;
   opacity: 0.5;
-  transition: all 0.3s, border-color 1.5s ease, color 1.5s ease;
+  transition:
+    all 0.3s,
+    border-color 1.5s ease,
+    color 1.5s ease;
   backdrop-filter: blur(10px);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -727,7 +788,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.85;
   }
   50% {
@@ -761,7 +823,10 @@
   font-size: 20px;
   z-index: 999;
   opacity: 0.5;
-  transition: all 0.3s, border-color 1.5s ease, color 1.5s ease;
+  transition:
+    all 0.3s,
+    border-color 1.5s ease,
+    color 1.5s ease;
   backdrop-filter: blur(10px);
   line-height: 1;
 }
@@ -830,7 +895,9 @@
   font-weight: 400;
   letter-spacing: 0.12em;
   margin: 0;
-  text-shadow: 0 0 25px var(--primary), 0 0 50px var(--primary),
+  text-shadow:
+    0 0 25px var(--primary),
+    0 0 50px var(--primary),
     0 0 75px var(--secondary);
 }
 
@@ -851,12 +918,12 @@
     font-size: 60px;
   }
 
-  [data-theme="thehill"] .ep-title {
+  [data-theme='thehill'] .ep-title {
     font-size: 56px;
   }
 
   .artwork-container {
-    max-width: 340px;
+    max-width: 600px;
   }
 
   .site-content {
@@ -869,7 +936,6 @@
     display: flex;
     flex-direction: column;
   }
-
 
   .slide-container {
     flex: 1;
@@ -932,7 +998,7 @@
     max-width: 100%;
     width: 100%;
     margin-bottom: 12px;
-    padding: 0 12px;
+    padding: 0 12px 30px;
   }
 
   .artwork-frame {
@@ -963,7 +1029,7 @@
     margin-bottom: 6px;
   }
 
-  [data-theme="thehill"] .ep-title {
+  [data-theme='thehill'] .ep-title {
     font-size: 40px;
     letter-spacing: 0.03em;
   }

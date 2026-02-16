@@ -1,5 +1,4 @@
 import { EPTheme } from '../data/eps'
-import { HeartbeatTitle } from './HeartbeatTitle'
 
 interface EPPageProps {
   theme: EPTheme
@@ -46,12 +45,12 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
       </div>
 
       <div className="ep-info">
-        <div className="ep-subtitle">PACIFIC GHOST</div>
-        {theme.id === 'lovesickage' ? (
-          <HeartbeatTitle text={theme.name} />
-        ) : (
-          <h1 className="ep-title">{theme.name}</h1>
-        )}
+        {/* <div className="ep-subtitle">PACIFIC GHOST</div> */}
+        {/* {theme.id === 'lovesickage' ? ( */}
+        {/*   <HeartbeatTitle text={theme.name} /> */}
+        {/* ) : ( */}
+        {/*   <h1 className="ep-title">{theme.name}</h1> */}
+        {/* )} */}
         <div className={`ep-status ${theme.statusType}`}>{theme.status}</div>
         <p className="ep-description">
           {theme.description.map((line, i) => (
