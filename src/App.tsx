@@ -1,6 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
 import './App.css'
 import { EP_THEMES, getEPIndex } from './data/eps'
 import { StoryProgress } from './components/StoryProgress'
@@ -10,43 +9,93 @@ import { useAudioPlayer } from './hooks/useAudioPlayer'
 import { useCarousel } from './hooks/useCarousel'
 import { useEPTheme } from './hooks/useEPTheme'
 
-const slideVariants = {
-  enter: (direction: string) => ({
-    x: direction === 'right' ? '100%' : '-100%',
-  }),
-  center: {
-    x: 0,
-  },
-  exit: (direction: string) => ({
-    x: direction === 'right' ? '-100%' : '100%',
-  }),
-}
-
-const slideTransition = {
-  type: 'tween',
-  duration: 0.35,
-  ease: 'easeInOut',
-} as const
-
 const epIds = new Set(EP_THEMES.map((ep) => ep.id))
 
 function App() {
   const navigate = useNavigate()
   const [currentTheme] = useEPTheme()
   const player = useAudioPlayer()
-  const carousel = useCarousel(epIds, currentTheme.id, (nextId) => {
-    player.pause()
-    navigate(`/ep/${nextId}`)
-  })
 
-  // Sync tracks when EP changes — player/tracks are derived from currentTheme.id
+  const currentIndex = EP_THEMES.findIndex((ep) => ep.id === currentTheme.id)
+  const prevTheme =
+    EP_THEMES[(currentIndex - 1 + EP_THEMES.length) % EP_THEMES.length]
+  const nextTheme = EP_THEMES[(currentIndex + 1) % EP_THEMES.length]
+
+  const stripRef = useRef<HTMLDivElement>(null)
+  const isAnimatingRef = useRef(false)
+  const isResettingRef = useRef(false)
+  const touchStartX = useRef<number | null>(null)
+  const touchStartTime = useRef<number | null>(null)
+
+  // After navigate() triggers a re-render, useLayoutEffect fires synchronously
+  // after React commits the new slot themes but before the browser paints.
+  // This guarantees the strip position reset and the new content land in the same frame.
+  useLayoutEffect(() => {
+    if (!isResettingRef.current) return
+    const strip = stripRef.current
+    if (strip) {
+      strip.style.transform = 'translateX(calc(-100vw))'
+    }
+    isResettingRef.current = false
+    isAnimatingRef.current = false
+  }, [currentTheme.id])
+
+  // Animate the strip to the target position, then navigate and reset.
+  // Used by both swipe commits and programmatic navigation (auto-advance, clicks).
+  const animateAndNavigate = useCallback(
+    (nextId: string, targetX: string) => {
+      const strip = stripRef.current
+      if (!strip) {
+        navigate(`/ep/${nextId}`)
+        return
+      }
+
+      const onEnd = (e: TransitionEvent) => {
+        if (e.propertyName !== 'transform') return
+        strip.removeEventListener('transitionend', onEnd)
+        strip.style.transition = 'none'
+        // Signal useLayoutEffect to reset the strip after React re-renders.
+        // isAnimatingRef stays true until the layout effect clears it.
+        isResettingRef.current = true
+        navigate(`/ep/${nextId}`)
+      }
+      strip.addEventListener('transitionend', onEnd)
+      strip.style.transform = targetX
+    },
+    [navigate],
+  )
+
+  // Called by useCarousel for programmatic navigation (auto-advance, nav-area clicks).
+  const performNavigate = useCallback(
+    (nextId: string) => {
+      player.pause()
+      const strip = stripRef.current
+      if (!strip || isAnimatingRef.current) {
+        navigate(`/ep/${nextId}`)
+        return
+      }
+
+      const nextIdx = EP_THEMES.findIndex((ep) => ep.id === nextId)
+      const isNext = nextIdx === (currentIndex + 1) % EP_THEMES.length
+      const targetX = isNext
+        ? 'translateX(calc(-200vw))'
+        : 'translateX(0vw)'
+
+      isAnimatingRef.current = true
+      strip.style.transition = 'transform 0.35s ease-in-out'
+      animateAndNavigate(nextId, targetX)
+    },
+    [player, navigate, currentIndex, animateAndNavigate],
+  )
+
+  const carousel = useCarousel(epIds, currentTheme.id, performNavigate)
+
   useEffect(() => {
     player.setTracks(currentTheme.tracks)
     player.loadTrack(0)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTheme.id])
 
-  // Disable auto-advance when audio starts playing
   useEffect(() => {
     if (player.isPlaying && carousel.autoPlay) {
       carousel.toggleAutoPlay()
@@ -54,18 +103,58 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player.isPlaying])
 
-  const touchStartX = useRef<number | null>(null)
-
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (isAnimatingRef.current) return
     touchStartX.current = e.touches[0].clientX
+    touchStartTime.current = Date.now()
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const delta = e.touches[0].clientX - touchStartX.current
+    const strip = stripRef.current
+    if (strip) {
+      strip.style.transition = 'none'
+      strip.style.transform = `translateX(calc(-100vw + ${delta}px))`
+    }
   }
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return
-    const delta = e.changedTouches[0].clientX - touchStartX.current
+    if (touchStartX.current === null || touchStartTime.current === null) return
+    const endX = e.changedTouches[0].clientX
+    const delta = endX - touchStartX.current
+    const elapsed = Math.max(1, Date.now() - touchStartTime.current)
+    const velocity = delta / elapsed // px/ms
     touchStartX.current = null
-    if (delta < -60) carousel.next()
-    else if (delta > 60) carousel.prev()
+    touchStartTime.current = null
+
+    const strip = stripRef.current
+    if (!strip) return
+
+    const isNext = delta < -60 || velocity < -0.3
+    const isPrev = delta > 60 || velocity > 0.3
+
+    if (isNext || isPrev) {
+      player.pause()
+      isAnimatingRef.current = true
+      const nextId = isNext ? nextTheme.id : prevTheme.id
+      const targetX = isNext
+        ? 'translateX(calc(-200vw))'
+        : 'translateX(0vw)'
+      strip.style.transition = 'transform 0.25s ease-out'
+      animateAndNavigate(nextId, targetX)
+    } else {
+      // Snap back to center
+      strip.style.transition =
+        'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      strip.style.transform = 'translateX(calc(-100vw))'
+      const cleanup = (e: TransitionEvent) => {
+        if (e.propertyName !== 'transform') return
+        strip.style.transition = ''
+        strip.removeEventListener('transitionend', cleanup)
+      }
+      strip.addEventListener('transitionend', cleanup)
+    }
   }
 
   const handleArtworkClick = () => {
@@ -93,26 +182,20 @@ function App() {
       <div
         className="slide-container"
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <AnimatePresence
-          initial={false}
-          mode="popLayout"
-          custom={carousel.direction}
-        >
-          <motion.div
-            key={currentTheme.id}
-            data-theme={currentTheme.id}
-            custom={carousel.direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={slideTransition}
-          >
+        <div ref={stripRef} className="slide-strip">
+          <div className="slide-slot" data-theme={prevTheme.id}>
+            <EPPage theme={prevTheme} onArtworkClick={handleArtworkClick} />
+          </div>
+          <div className="slide-slot" data-theme={currentTheme.id}>
             <EPPage theme={currentTheme} onArtworkClick={handleArtworkClick} />
-          </motion.div>
-        </AnimatePresence>
+          </div>
+          <div className="slide-slot" data-theme={nextTheme.id}>
+            <EPPage theme={nextTheme} onArtworkClick={handleArtworkClick} />
+          </div>
+        </div>
       </div>
 
       <PlayerBar
