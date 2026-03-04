@@ -61,7 +61,21 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
           ))}
         </p>
         <div className="links">
-          {theme.statusType === 'coming' ? null : (
+          {theme.statusType === 'coming' ? (
+            <>
+              {theme.links?.spotify && (
+                <a
+                  href={theme.links.spotify}
+                  className="link-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="link-icon">►</span>
+                  <span>Follow</span>
+                </a>
+              )}
+            </>
+          ) : (
             <>
               {theme.links?.spotify && (
                 <a

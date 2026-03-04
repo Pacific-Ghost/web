@@ -37,13 +37,12 @@ describe('EPPage', () => {
     expect(handleClick).toHaveBeenCalledOnce()
   })
 
-  // TODO: re-enable when pre-save/follow links are wired up
-  it('hides link buttons for coming statusType', () => {
-    const { queryByText } = render(
+  it('shows Follow button for coming statusType when Spotify link is present', () => {
+    const { getByText, queryByText } = render(
       <EPPage theme={lovesickage} onArtworkClick={() => {}} />,
     )
+    expect(getByText('Follow')).not.toBeNull()
     expect(queryByText('Pre-Save')).toBeNull()
-    expect(queryByText('Follow')).toBeNull()
   })
 
   it('shows Spotify, Apple Music, Bandcamp buttons for available statusType', () => {
