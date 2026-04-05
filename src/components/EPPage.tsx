@@ -4,6 +4,7 @@ import { StreamingOverlay } from './StreamingOverlay'
 
 interface EPPageProps {
   theme: EPTheme
+  onBioClick?: () => void
 }
 
 function buildStreamingLinks(links: EPTheme['links']) {
@@ -15,7 +16,7 @@ function buildStreamingLinks(links: EPTheme['links']) {
   return result
 }
 
-export function EPPage({ theme }: EPPageProps) {
+export function EPPage({ theme, onBioClick }: EPPageProps) {
   const [overlayOpen, setOverlayOpen] = useState(false)
   const streamingLinks = buildStreamingLinks(theme.links)
   const hasLinks = streamingLinks.length > 0
@@ -62,6 +63,7 @@ export function EPPage({ theme }: EPPageProps) {
         {theme.artwork?.credit && (
           <div className="artwork-credit">Artwork {theme.artwork.credit}</div>
         )}
+        {isAvailable && <div className="stream-hint">Stream</div>}
       </div>
 
       <div className="ep-info">
@@ -91,6 +93,12 @@ export function EPPage({ theme }: EPPageProps) {
           </div>
         )}
       </div>
+
+      {onBioClick && (
+        <button className="bio-button-inline" onClick={onBioClick}>
+          About
+        </button>
+      )}
 
       {overlayOpen && hasLinks && (
         <StreamingOverlay
