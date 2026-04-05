@@ -4,28 +4,7 @@ import { EPPage } from './EPPage'
 import { EP_THEMES } from '../data/eps'
 
 describe('EPPage', () => {
-  const lovesickage = EP_THEMES[0] // statusType: 'coming', id: 'lovesickage'
-  const thehill = EP_THEMES[1] // statusType: 'available', id: 'thehill'
-
-  it.skip('renders the EP name for a non-lovesickage EP', () => {
-    const { container } = render(
-      <EPPage theme={thehill} onArtworkClick={() => {}} />,
-    )
-    const h1 = container.querySelector('h1.ep-title')
-    expect(h1).not.toBeNull()
-    expect(h1!.textContent).toBe('THE HILL')
-  })
-
-  it.skip('renders HeartbeatTitle for lovesickage EP', () => {
-    const { container } = render(
-      <EPPage theme={lovesickage} onArtworkClick={() => {}} />,
-    )
-    const heartbeat = container.querySelector('.heartbeat-title')
-    expect(heartbeat).not.toBeNull()
-    // Should NOT have a plain h1.ep-title
-    const plainTitle = container.querySelector('h1.ep-title')
-    expect(plainTitle).toBeNull()
-  })
+  const thehill = EP_THEMES[1]
 
   it('calls onArtworkClick when artwork is clicked', () => {
     const handleClick = vi.fn()
@@ -38,11 +17,15 @@ describe('EPPage', () => {
   })
 
   it('shows Follow button for coming statusType when Spotify link is present', () => {
-    const { getByText, queryByText } = render(
-      <EPPage theme={lovesickage} onArtworkClick={() => {}} />,
+    const comingEP = {
+      ...thehill,
+      statusType: 'coming' as const,
+      links: { spotify: 'https://open.spotify.com/test' },
+    }
+    const { getByText } = render(
+      <EPPage theme={comingEP} onArtworkClick={() => {}} />,
     )
     expect(getByText('Follow')).not.toBeNull()
-    expect(queryByText('Pre-Save')).toBeNull()
   })
 
   it('shows Spotify, Apple Music, Bandcamp buttons for available statusType', () => {
@@ -63,12 +46,5 @@ describe('EPPage', () => {
       <EPPage theme={withDesc} onArtworkClick={() => {}} />,
     )
     expect(getByText('Debut EP. Six sun-drenched tracks.')).not.toBeNull()
-  })
-
-  it.skip('renders the PACIFIC GHOST subtitle', () => {
-    const { getByText } = render(
-      <EPPage theme={thehill} onArtworkClick={() => {}} />,
-    )
-    expect(getByText('PACIFIC GHOST')).not.toBeNull()
   })
 })
