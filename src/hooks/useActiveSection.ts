@@ -15,23 +15,19 @@ export function useActiveSection(
           ratios.set(entry.target, entry.intersectionRatio)
         }
 
-        let maxRatio = 0
-        let maxElement: Element | null = null
+        // Only switch when a section is majority-visible to prevent
+        // rapid flipping during mid-scroll
         for (const [element, ratio] of ratios) {
-          if (ratio > maxRatio) {
-            maxRatio = ratio
-            maxElement = element
-          }
-        }
-
-        if (maxElement) {
-          const index = refs.findIndex((ref) => ref.current === maxElement)
-          if (index !== -1) {
-            setActiveId(ids[index])
+          if (ratio > 0.5) {
+            const index = refs.findIndex((ref) => ref.current === element)
+            if (index !== -1) {
+              setActiveId(ids[index])
+            }
+            break
           }
         }
       },
-      { threshold: [0, 0.25, 0.5, 0.75, 1] },
+      { threshold: [0, 0.5, 1] },
     )
 
     for (const ref of refs) {
