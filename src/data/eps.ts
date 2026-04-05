@@ -35,9 +35,6 @@ export const EP_THEMES: EPTheme[] = [
       alt: 'Love Sick Age EP cover — black impasto heart on dark glitter',
       credit: '\u00a9 Cynthia Coulombe B\u00e9gin, 2025. Used with permission',
     },
-    links: {
-      spotify: 'https://open.spotify.com/artist/3grYt3aOy0jbxAbDEvzeNm',
-    },
     tracks: [
       {
         id: 1,
