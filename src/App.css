@@ -1,5 +1,30 @@
 /* Base App Styles with Dynamic Theming */
 
+/* Register color properties so they can be animated between themes */
+@property --bg-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0a0515;
+}
+
+@property --primary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e8c36a;
+}
+
+@property --secondary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #c8963e;
+}
+
+@property --text-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f0f0ff;
+}
+
 /* Theme: Love Sick Age (Gold + Bronze) */
 [data-theme='lovesickage'] {
   --bg-color: #0a0515;
@@ -32,8 +57,10 @@
   background: var(--bg-color);
   color: var(--text-color);
   transition:
-    background-color 1.5s ease,
-    color 1.5s ease;
+    --bg-color 1.5s ease,
+    --primary 1.5s ease,
+    --secondary 1.5s ease,
+    --text-color 1.5s ease;
 }
 
 /* Scroll Container */
