@@ -53,7 +53,15 @@ function App() {
             className="ep-section"
             data-theme={theme.id}
           >
-            <EPPage theme={theme} />
+            <EPPage
+              theme={theme}
+              onBioClick={() =>
+                navigate('/bio', { state: { fromEP: activeId } })
+              }
+            />
+            {index < EP_THEMES.length - 1 && (
+              <div className="scroll-indicator" aria-hidden="true" />
+            )}
           </section>
         ))}
       </div>
