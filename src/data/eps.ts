@@ -20,7 +20,7 @@ export const EP_THEMES: EPTheme[] = [
     id: 'lovesickage',
     name: 'LOVE SICK AGE',
     icon: '◆',
-    status: 'Available Now',
+    status: 'Stream Now',
     statusType: 'available',
     description: [],
     bgColor: '#0a0515',
