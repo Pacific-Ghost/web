@@ -31,3 +31,6 @@ docs/
 
 # Original artwork (full-res source files)
 public/artwork/originals/
+
+.playwright-mcp
+.impeccable.md
