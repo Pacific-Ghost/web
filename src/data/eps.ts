@@ -20,8 +20,8 @@ export const EP_THEMES: EPTheme[] = [
     id: 'lovesickage',
     name: 'LOVE SICK AGE',
     icon: '◆',
-    status: 'April Fools Day',
-    statusType: 'coming',
+    status: 'Available Now',
+    statusType: 'available',
     description: [],
     bgColor: '#0a0515',
     primary: '#e8c36a',
@@ -60,6 +60,13 @@ export const EP_THEMES: EPTheme[] = [
         file: 'https://s3.us-west-1.amazonaws.com/media.pacificghost.fm/audio/graveyard-moon.mp3',
       },
     ],
+    links: {
+      spotify:
+        'https://open.spotify.com/album/2Prem4KaqbzbRYW3ipWVnU?si=TgiETATJS4ec5BVtK4BLaw',
+      appleMusic:
+        'https://music.apple.com/us/album/love-sick-age-ep/1880012458',
+      bandcamp: 'https://pacificghost8675.bandcamp.com/album/love-sick-age',
+    },
   },
   {
     id: 'thehill',
