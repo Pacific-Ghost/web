@@ -1,17 +1,15 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { EPTheme, getEPById, EP_THEMES } from '../data/eps'
 
 export function useEPTheme(
-  overrideId?: string,
+  epId?: string,
 ): [EPTheme, (id: string) => void] {
-  const { id: routeId } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const epId = overrideId ?? routeId ?? EP_THEMES[0].id
-  const theme = getEPById(epId)
+  const theme = getEPById(epId ?? EP_THEMES[0].id)
 
   const setTheme = (id: string) => {
-    navigate(`/ep/${id}`)
+    navigate(`/`, { state: { scrollTo: id } })
   }
 
   return [theme, setTheme]
