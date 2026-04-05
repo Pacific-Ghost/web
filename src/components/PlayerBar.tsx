@@ -10,9 +10,6 @@ interface PlayerBarProps {
   onVolumeChange: (volume: number) => void
   onSeek: (percent: number) => void
   onBioClick: () => void
-  autoPlay: boolean
-  onToggleAutoPlay: () => void
-  autoPlayDisabled: boolean
 }
 
 function PrevIcon() {
@@ -62,9 +59,6 @@ export function PlayerBar({
   onVolumeChange,
   onSeek,
   onBioClick,
-  autoPlay,
-  onToggleAutoPlay,
-  autoPlayDisabled,
 }: PlayerBarProps) {
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -101,16 +95,6 @@ export function PlayerBar({
           />
         </div>
       </div>
-
-      <button
-        className={`player-bar-autoplay ${!autoPlay ? 'paused' : ''}`}
-        disabled={autoPlayDisabled}
-        onClick={onToggleAutoPlay}
-        title={autoPlay ? 'Auto-advance enabled' : 'Auto-advance paused'}
-      >
-        <span>{autoPlay ? '‖' : '►'}</span>
-        <span className="player-bar-autoplay-label">{autoPlay ? 'Auto' : 'Paused'}</span>
-      </button>
 
       <div className="volume-control">
         <input

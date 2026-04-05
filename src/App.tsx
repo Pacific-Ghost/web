@@ -76,9 +76,6 @@ function App() {
         onBioClick={() =>
           navigate('/bio', { state: { fromEP: activeId } })
         }
-        autoPlay={false}
-        onToggleAutoPlay={() => {}}
-        autoPlayDisabled={true}
       />
 
       <button
