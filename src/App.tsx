@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './App.css'
 import { EP_THEMES } from './data/eps'
@@ -37,10 +37,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleArtworkClick = useCallback(() => {
-    player.loadTrack(0, true)
-  }, [player])
-
   return (
     <div className="app" data-theme={activeId}>
       <div className="neon-glow-bg" />
@@ -57,7 +53,7 @@ function App() {
             className="ep-section"
             data-theme={theme.id}
           >
-            <EPPage theme={theme} onArtworkClick={handleArtworkClick} />
+            <EPPage theme={theme} />
           </section>
         ))}
       </div>

@@ -1,17 +1,32 @@
+import { useState } from 'react'
 import { EPTheme } from '../data/eps'
+import { StreamingOverlay } from './StreamingOverlay'
 
 interface EPPageProps {
   theme: EPTheme
-  onArtworkClick: () => void
 }
 
-export function EPPage({ theme, onArtworkClick }: EPPageProps) {
+function buildStreamingLinks(links: EPTheme['links']) {
+  if (!links) return []
+  const result: { platform: 'spotify' | 'appleMusic' | 'bandcamp'; url: string }[] = []
+  if (links.spotify) result.push({ platform: 'spotify', url: links.spotify })
+  if (links.appleMusic) result.push({ platform: 'appleMusic', url: links.appleMusic })
+  if (links.bandcamp) result.push({ platform: 'bandcamp', url: links.bandcamp })
+  return result
+}
+
+export function EPPage({ theme }: EPPageProps) {
+  const [overlayOpen, setOverlayOpen] = useState(false)
+  const streamingLinks = buildStreamingLinks(theme.links)
+  const hasLinks = streamingLinks.length > 0
+  const isAvailable = theme.statusType === 'available' && hasLinks
+
   return (
     <div className="site-content">
       <div
         className="artwork-container"
-        onClick={onArtworkClick}
-        style={{ cursor: 'pointer' }}
+        onClick={isAvailable ? () => setOverlayOpen(true) : undefined}
+        style={isAvailable ? { cursor: 'pointer' } : undefined}
       >
         <div className="artwork-glow-outer" />
         <div className="artwork-frame">
@@ -38,6 +53,11 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
               <div className="artwork-icon">{theme.icon}</div>
             </div>
           )}
+          {isAvailable && (
+            <div className="artwork-cta">
+              <span className="artwork-cta-text">Stream Now</span>
+            </div>
+          )}
         </div>
         {theme.artwork?.credit && (
           <div className="artwork-credit">Artwork {theme.artwork.credit}</div>
@@ -45,13 +65,9 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
       </div>
 
       <div className="ep-info">
-        {/* <div className="ep-subtitle">PACIFIC GHOST</div> */}
-        {/* {theme.id === 'lovesickage' ? ( */}
-        {/*   <HeartbeatTitle text={theme.name} /> */}
-        {/* ) : ( */}
-        {/*   <h1 className="ep-title">{theme.name}</h1> */}
-        {/* )} */}
-        <div className={`ep-status ${theme.statusType}`}>{theme.status}</div>
+        {theme.statusType === 'coming' && (
+          <div className={`ep-status ${theme.statusType}`}>{theme.status}</div>
+        )}
         <p className="ep-description">
           {theme.description.map((line, i) => (
             <span key={i}>
@@ -60,60 +76,29 @@ export function EPPage({ theme, onArtworkClick }: EPPageProps) {
             </span>
           ))}
         </p>
-        <div className="links">
-          {theme.statusType === 'coming' ? (
-            <>
-              {theme.links?.spotify && (
-                <a
-                  href={theme.links.spotify}
-                  className="link-btn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="link-icon">►</span>
-                  <span>Follow</span>
-                </a>
-              )}
-            </>
-          ) : (
-            <>
-              {theme.links?.spotify && (
-                <a
-                  href={theme.links.spotify}
-                  className="link-btn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="link-icon">►</span>
-                  <span>Spotify</span>
-                </a>
-              )}
-              {theme.links?.appleMusic && (
-                <a
-                  href={theme.links.appleMusic}
-                  className="link-btn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="link-icon">♪</span>
-                  <span>Apple Music</span>
-                </a>
-              )}
-              {theme.links?.bandcamp && (
-                <a
-                  href={theme.links.bandcamp}
-                  className="link-btn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="link-icon">◆</span>
-                  <span>Bandcamp</span>
-                </a>
-              )}
-            </>
-          )}
-        </div>
+
+        {theme.statusType === 'coming' && theme.links?.spotify && (
+          <div className="links">
+            <a
+              href={theme.links.spotify}
+              className="link-btn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="link-icon">►</span>
+              <span>Follow</span>
+            </a>
+          </div>
+        )}
       </div>
+
+      {overlayOpen && hasLinks && (
+        <StreamingOverlay
+          links={streamingLinks}
+          epName={theme.name}
+          onClose={() => setOverlayOpen(false)}
+        />
+      )}
     </div>
   )
 }
