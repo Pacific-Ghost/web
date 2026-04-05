@@ -62,6 +62,28 @@ describe('useActiveSection', () => {
     expect(result.current).toBe('thehill')
   })
 
+  it('does not switch when no section exceeds 50% visibility', () => {
+    const ids = ['lovesickage', 'thehill']
+    const el1 = document.createElement('div')
+    const el2 = document.createElement('div')
+    const refs = [{ current: el1 }, { current: el2 }]
+    const { result } = renderHook(() => useActiveSection(ids, refs))
+
+    // Both sections partially visible during mid-scroll
+    act(() => {
+      observerCallback(
+        [
+          { target: el1, intersectionRatio: 0.4 } as unknown as IntersectionObserverEntry,
+          { target: el2, intersectionRatio: 0.45 } as unknown as IntersectionObserverEntry,
+        ],
+        {} as IntersectionObserver,
+      )
+    })
+
+    // Should stay on first section — neither crossed 50%
+    expect(result.current).toBe('lovesickage')
+  })
+
   it('disconnects observer on unmount', () => {
     const ids = ['lovesickage', 'thehill']
     const refs = ids.map(() => ({ current: document.createElement('div') }))
