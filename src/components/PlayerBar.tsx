@@ -9,7 +9,6 @@ interface PlayerBarProps {
   onPrevTrack: () => void
   onVolumeChange: (volume: number) => void
   onSeek: (percent: number) => void
-  onBioClick: () => void
 }
 
 function PrevIcon() {
@@ -58,7 +57,6 @@ export function PlayerBar({
   onPrevTrack,
   onVolumeChange,
   onSeek,
-  onBioClick,
 }: PlayerBarProps) {
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -68,10 +66,6 @@ export function PlayerBar({
 
   return (
     <div className="player-bar">
-      <button className="player-bar-bio" onClick={onBioClick} title="About Pacific Ghost">
-        &#9432;
-      </button>
-
       <div className="player-controls">
         <button className="player-btn" onClick={onPrevTrack}>
           <PrevIcon />

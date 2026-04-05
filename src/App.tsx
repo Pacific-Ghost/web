@@ -73,9 +73,6 @@ function App() {
         onPrevTrack={player.prevTrack}
         onVolumeChange={player.setVolume}
         onSeek={player.seek}
-        onBioClick={() =>
-          navigate('/bio', { state: { fromEP: activeId } })
-        }
       />
 
       <button
