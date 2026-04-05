@@ -41,8 +41,9 @@ function AnimatedRoutes() {
         <Routes location={location}>
           <Route path="/" element={<App />} />
           <Route path="/bio" element={<BioPage />} />
-          {/* Redirect old EP routes to home */}
+          {/* Redirect old EP routes and stray paths (e.g. /index.html from S3 redirect) to home */}
           <Route path="/ep/:id" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
