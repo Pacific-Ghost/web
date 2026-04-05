@@ -52,8 +52,8 @@ describe('useActiveSection', () => {
     act(() => {
       observerCallback(
         [
-          { target: el1, intersectionRatio: 0.2 } as IntersectionObserverEntry,
-          { target: el2, intersectionRatio: 0.8 } as IntersectionObserverEntry,
+          { target: el1, intersectionRatio: 0.2 } as unknown as IntersectionObserverEntry,
+          { target: el2, intersectionRatio: 0.8 } as unknown as IntersectionObserverEntry,
         ],
         {} as IntersectionObserver,
       )
