@@ -25,8 +25,7 @@ const pageTransition = { duration: 0.6, ease: 'easeInOut' } as const
 function AnimatedRoutes() {
   const location = useLocation()
 
-  // Use a simplified key: "bio" vs "ep" so EP-to-EP navigation doesn't fade
-  const routeKey = location.pathname === '/bio' ? 'bio' : 'ep'
+  const routeKey = location.pathname === '/bio' ? 'bio' : 'home'
 
   return (
     <AnimatePresence>
@@ -40,9 +39,10 @@ function AnimatedRoutes() {
         transition={pageTransition}
       >
         <Routes location={location}>
-          <Route path="/" element={<Navigate to="/ep/lovesickage" replace />} />
-          <Route path="/ep/:id" element={<App />} />
+          <Route path="/" element={<App />} />
           <Route path="/bio" element={<BioPage />} />
+          {/* Redirect old EP routes to home */}
+          <Route path="/ep/:id" element={<Navigate to="/" replace />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
