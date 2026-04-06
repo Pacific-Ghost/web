@@ -1150,6 +1150,11 @@
 
   .artwork-cta {
     opacity: 1;
+  }
+
+  .artwork-cta,
+  .artwork-container:hover .artwork-cta,
+  .artwork-container:active .artwork-cta {
     background: none;
   }
 
