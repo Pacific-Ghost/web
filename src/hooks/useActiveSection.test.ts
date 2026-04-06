@@ -52,8 +52,14 @@ describe('useActiveSection', () => {
     act(() => {
       observerCallback(
         [
-          { target: el1, intersectionRatio: 0.2 } as unknown as IntersectionObserverEntry,
-          { target: el2, intersectionRatio: 0.8 } as unknown as IntersectionObserverEntry,
+          {
+            target: el1,
+            intersectionRatio: 0.2,
+          } as unknown as IntersectionObserverEntry,
+          {
+            target: el2,
+            intersectionRatio: 0.8,
+          } as unknown as IntersectionObserverEntry,
         ],
         {} as IntersectionObserver,
       )
@@ -73,8 +79,14 @@ describe('useActiveSection', () => {
     act(() => {
       observerCallback(
         [
-          { target: el1, intersectionRatio: 0.4 } as unknown as IntersectionObserverEntry,
-          { target: el2, intersectionRatio: 0.45 } as unknown as IntersectionObserverEntry,
+          {
+            target: el1,
+            intersectionRatio: 0.4,
+          } as unknown as IntersectionObserverEntry,
+          {
+            target: el2,
+            intersectionRatio: 0.45,
+          } as unknown as IntersectionObserverEntry,
         ],
         {} as IntersectionObserver,
       )

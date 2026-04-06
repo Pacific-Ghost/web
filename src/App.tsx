@@ -81,9 +81,7 @@ function App() {
 
       <button
         className="bio-button"
-        onClick={() =>
-          navigate('/bio', { state: { fromEP: activeId } })
-        }
+        onClick={() => navigate('/bio', { state: { fromEP: activeId } })}
         title="About Pacific Ghost"
       >
         &#9432;

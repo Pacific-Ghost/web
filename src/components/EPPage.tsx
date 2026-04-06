@@ -9,9 +9,13 @@ interface EPPageProps {
 
 function buildStreamingLinks(links: EPTheme['links']) {
   if (!links) return []
-  const result: { platform: 'spotify' | 'appleMusic' | 'bandcamp'; url: string }[] = []
+  const result: {
+    platform: 'spotify' | 'appleMusic' | 'bandcamp'
+    url: string
+  }[] = []
   if (links.spotify) result.push({ platform: 'spotify', url: links.spotify })
-  if (links.appleMusic) result.push({ platform: 'appleMusic', url: links.appleMusic })
+  if (links.appleMusic)
+    result.push({ platform: 'appleMusic', url: links.appleMusic })
   if (links.bandcamp) result.push({ platform: 'bandcamp', url: links.bandcamp })
   return result
 }
@@ -63,7 +67,6 @@ export function EPPage({ theme, onBioClick }: EPPageProps) {
         {theme.artwork?.credit && (
           <div className="artwork-credit">Artwork {theme.artwork.credit}</div>
         )}
-        {isAvailable && <div className="stream-hint">Stream</div>}
       </div>
 
       <div className="ep-info">
