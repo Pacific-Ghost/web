@@ -7,8 +7,12 @@ export function useAudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(() => audioPlayer.getPlaying())
   const [progress, setProgress] = useState(0)
   const [volume, setVolume] = useState(() => audioPlayer.getVolume())
-  const [currentTrack, setCurrentTrack] = useState(() => audioPlayer.getCurrentTrack().index)
-  const [trackName, setTrackName] = useState(() => audioPlayer.getCurrentTrack().name)
+  const [currentTrack, setCurrentTrack] = useState(
+    () => audioPlayer.getCurrentTrack().index,
+  )
+  const [trackName, setTrackName] = useState(
+    () => audioPlayer.getCurrentTrack().name,
+  )
 
   useEffect(() => {
     audioPlayer.onPlaybackChange(setIsPlaying)

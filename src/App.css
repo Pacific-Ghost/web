@@ -38,8 +38,8 @@
 /* Theme: The Hill (Hot Pink + Yellow) */
 [data-theme='thehill'] {
   --bg-color: #1a0a0f;
-  --primary: #ff1493;
-  --secondary: #ffd700;
+  --primary: #ffd700;
+  --secondary: #ff1493;
   --text-color: #fff5e6;
   --heading-font: 'Monoton', cursive;
 }
@@ -82,7 +82,7 @@
 /* Scroll indicator chevron on non-last sections */
 .scroll-indicator {
   position: absolute;
-  bottom: 80px;
+  bottom: 110px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
@@ -99,10 +99,10 @@
 .scroll-indicator::after {
   content: '';
   display: block;
-  width: 12px;
-  height: 12px;
-  border-right: 1.5px solid var(--primary);
-  border-bottom: 1.5px solid var(--primary);
+  width: 24px;
+  height: 24px;
+  border-right: 3.5px solid var(--primary);
+  border-bottom: 3.5px solid var(--primary);
   transform: rotate(45deg);
 }
 
@@ -111,7 +111,8 @@
 }
 
 @keyframes scrollHint {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.35;
     transform: translateX(-50%) translateY(0);
   }
@@ -288,29 +289,13 @@
 }
 
 .artwork-credit {
-  font-size: 8px;
+  font-size: 10px;
   opacity: 0.4;
   letter-spacing: 1px;
   margin-top: 7px;
   text-align: center;
   font-weight: 300;
   white-space: nowrap;
-}
-
-/* Subtle stream hint below artwork — desktop only */
-.stream-hint {
-  font-size: 10px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--primary);
-  opacity: 0.4;
-  margin-top: 10px;
-  text-align: center;
-  transition: opacity 0.3s;
-}
-
-.artwork-container:hover .stream-hint {
-  opacity: 0;
 }
 
 .artwork-image {
@@ -623,14 +608,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.45);
-  opacity: 0;
+  opacity: 0.7;
   transition: opacity 0.3s;
   z-index: 2;
 }
 
 .artwork-container:hover .artwork-cta,
 .artwork-container:active .artwork-cta {
+  background: rgba(0, 0, 0, 0.45);
   opacity: 1;
 }
 
@@ -798,7 +783,6 @@
   background: rgba(26, 10, 15, 0.85);
 }
 
-
 .player-controls {
   display: flex;
   gap: 14px;
@@ -918,7 +902,6 @@
   border-radius: 2px;
   height: 4px;
 }
-
 
 /* Bio Button — inline version (mobile only) */
 .bio-button-inline {
@@ -1251,11 +1234,7 @@
     display: block;
   }
 
-  .stream-hint {
-    display: none;
-  }
-
   .scroll-indicator {
-    bottom: 65px;
+    bottom: 80px;
   }
 }
