@@ -1218,7 +1218,7 @@
 
   /* Scroll indicator chevron on non-last sections */
   .scroll-indicator {
-    bottom: 80px;
+    bottom: 70px;
   }
 
   .scroll-indicator::before,
