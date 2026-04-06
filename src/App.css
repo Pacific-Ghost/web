@@ -38,8 +38,8 @@
 /* Theme: The Hill (Hot Pink + Yellow) */
 [data-theme='thehill'] {
   --bg-color: #1a0a0f;
-  --primary: #ffd700;
-  --secondary: #ff1493;
+  --primary: #ff1493;
+  --secondary: #ffd700;
   --text-color: #fff5e6;
   --heading-font: 'Monoton', cursive;
 }
