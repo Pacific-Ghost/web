@@ -64,9 +64,6 @@ export function EPPage({ theme, onBioClick }: EPPageProps) {
             </div>
           )}
         </div>
-        {theme.artwork?.credit && (
-          <div className="artwork-credit">Artwork {theme.artwork.credit}</div>
-        )}
       </div>
 
       <div className="ep-info">
