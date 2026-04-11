@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './App.css'
 import { EP_THEMES } from './data/eps'
@@ -12,6 +12,7 @@ const epIds = EP_THEMES.map((ep) => ep.id)
 function App() {
   const navigate = useNavigate()
   const player = useAudioPlayer()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const sectionRefs = useRef(
     EP_THEMES.map(() => ({ current: null as HTMLElement | null })),
@@ -43,6 +44,41 @@ function App() {
       <div className="neon-grid" />
       <div className="grain-layer" />
 
+      <header className="site-header">
+        <span className="header-wordmark">Pacific Ghost</span>
+        <button
+          className="header-menu-btn"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label="Menu"
+        >
+          <span className="header-menu-icon" />
+        </button>
+      </header>
+
+      {menuOpen && (
+        <nav className="header-menu" onClick={() => setMenuOpen(false)}>
+          <div className="header-menu-panel">
+            <button
+              className="header-menu-link"
+              onClick={() =>
+                navigate('/bio', { state: { fromEP: activeId } })
+              }
+            >
+              About
+            </button>
+          </div>
+        </nav>
+      )}
+
+      <div className="ep-dots" aria-label="EP navigation">
+        {EP_THEMES.map((ep) => (
+          <div
+            key={ep.id}
+            className={`ep-dot${ep.id === activeId ? ' active' : ''}`}
+          />
+        ))}
+      </div>
+
       <div className="scroll-container">
         {EP_THEMES.map((theme, index) => (
           <section
@@ -53,15 +89,7 @@ function App() {
             className="ep-section"
             data-theme={theme.id}
           >
-            <EPPage
-              theme={theme}
-              onBioClick={() =>
-                navigate('/bio', { state: { fromEP: activeId } })
-              }
-            />
-            {index < EP_THEMES.length - 1 && (
-              <div className="scroll-indicator" aria-hidden="true" />
-            )}
+            <EPPage theme={theme} />
           </section>
         ))}
       </div>
@@ -78,14 +106,6 @@ function App() {
         onVolumeChange={player.setVolume}
         onSeek={player.seek}
       />
-
-      <button
-        className="bio-button"
-        onClick={() => navigate('/bio', { state: { fromEP: activeId } })}
-        title="About Pacific Ghost"
-      >
-        &#9432;
-      </button>
     </div>
   )
 }
