@@ -60,12 +60,13 @@ function App() {
           <div className="header-menu-panel">
             <button
               className="header-menu-link"
-              onClick={() =>
-                navigate('/bio', { state: { fromEP: activeId } })
-              }
+              onClick={() => navigate('/bio', { state: { fromEP: activeId } })}
             >
               About
             </button>
+            <a className="header-menu-link" href="mailto:hello@pacificghost.fm">
+              Contact
+            </a>
           </div>
         </nav>
       )}
