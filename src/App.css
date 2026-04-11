@@ -1096,6 +1096,10 @@
     font-size: 20px;
     letter-spacing: 5px;
   }
+  [data-theme='thehill'] .header-wordmark {
+    font-size: 18px;
+    letter-spacing: 4px;
+  }
 
   .header-menu-btn {
     right: 16px;
